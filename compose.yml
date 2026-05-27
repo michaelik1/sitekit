@@ -1,0 +1,14 @@
+networks:
+  reverse-proxy-network:
+    driver: bridge
+    external: true
+
+services:
+  decoy:
+    build: .
+    image: decoy:latest
+    container_name: decoy
+    expose:
+      - "3000"
+    networks:
+      - reverse-proxy-network
