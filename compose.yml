@@ -1,6 +1,5 @@
 networks:
   reverse-proxy-network:
-    driver: bridge
     external: true
 
 services:
