@@ -14,8 +14,8 @@ services:
       NODE_ENV: production
       HOST: 0.0.0.0
       PORT: 3000
-      NUXT_PUBLIC_SITE_URL: ${NUXT_PUBLIC_SITE_URL:-https://dacha-praktik.ru}
-      NUXT_PUBLIC_CONTACT_EMAIL: ${NUXT_PUBLIC_CONTACT_EMAIL:-editor@dacha-praktik.ru}
+      NUXT_PUBLIC_SITE_URL: ${NUXT_PUBLIC_SITE_URL:-https://dacha-guide.online}
+      NUXT_PUBLIC_CONTACT_EMAIL: ${NUXT_PUBLIC_CONTACT_EMAIL:-editor@dacha-guide.online}
     expose:
       - "3000"
     healthcheck:
