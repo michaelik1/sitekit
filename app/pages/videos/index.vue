@@ -1,23 +1,19 @@
 <script setup lang="ts">
-import type { VideoItem } from "~~/shared/videos";
-
-useSeoMeta({
-  title: "Видео",
-  description: "Видеоинструкции для дачников: теплица, полив, грядки, сад, защита растений и благоустройство."
-});
-
-const { data } = await useFetch<{ videos: VideoItem[]; categories: string[] }>("/api/videos", {
-  default: () => ({ videos: [], categories: [] })
-});
+import type { VideoCollection } from "~~/shared/content";
+const config = useRuntimeConfig();
+const { data } = await useFetch<VideoCollection>("/api/videos", { default: () => ({ videos: [], categories: [] }) });
+const canonical = `${String(config.public.siteUrl).replace(/\/$/, "")}/videos`;
+useSeoMeta({ title: "Видео", description: "Короткие видеоразборы по поливу, теплице, грядкам, саду и дачному хозяйству.", ogUrl: canonical });
+useHead({ link: [{ rel: "canonical", href: canonical }] });
 </script>
 
 <template>
   <div class="container page-shell">
-    <div class="page-heading">
+    <header class="archive-heading">
       <p class="eyebrow">Видеотека</p>
-      <h1>Видеоинструкции</h1>
-      <p>Ролики сгруппированы по темам. Метаданные берутся из YAML-файла в папке с видео, поэтому раздел удобно пополнять без правки компонентов.</p>
-    </div>
+      <h1>Короткие видеоразборы</h1>
+      <p>Ролики собраны по темам. Для каждого видео метаданные, постер и файл лежат в одной папке, поэтому раздел легко пополнять без правки страниц.</p>
+    </header>
     <VideoBrowser :videos="data?.videos ?? []" :categories="data?.categories ?? []" />
   </div>
 </template>

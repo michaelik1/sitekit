@@ -1,23 +1,30 @@
 {
-  "name": "dacha-praktik-nuxt4",
-  "version": "1.0.0",
+  "name": "dacha-praktik-decoy",
+  "version": "2.0.1",
   "private": true,
-  "description": "Русский контентный сайт о даче, саде, огороде и видеоинструкциях на Nuxt 4.",
+  "description": "Production-ready editorial decoy site about gardening, built with Nuxt 4 and file-based content.",
   "type": "module",
+  "engines": {
+    "node": ">=22.18.0"
+  },
   "scripts": {
-    "dev": "nuxt dev",
-    "build": "nuxt build",
-    "generate": "nuxt generate",
+    "content:build": "node scripts/prepare-content.mjs",
+    "content:check": "node scripts/prepare-content.mjs --check",
+    "dev": "node scripts/dev.mjs",
+    "build": "node scripts/prepare-content.mjs && nuxt build",
+    "generate": "node scripts/prepare-content.mjs && nuxt generate",
     "preview": "nuxt preview",
-    "typecheck": "nuxt typecheck"
+    "typecheck": "node scripts/prepare-content.mjs --check && nuxt prepare && tsc --noEmit -p tsconfig.json && node scripts/check-source.mjs",
+    "check": "npm run typecheck && npm run build",
+    "new:article": "node scripts/new-article.mjs",
+    "new:video": "node scripts/new-video.mjs",
+    "source:check": "node scripts/check-source.mjs"
   },
   "dependencies": {
-    "js-yaml": "^4.1.1",
     "nuxt": "^4.0.0",
     "vue": "^3.5.0"
   },
   "devDependencies": {
-    "@types/js-yaml": "^4.0.9",
     "@types/node": "^24.0.0",
     "typescript": "^5.9.0"
   }

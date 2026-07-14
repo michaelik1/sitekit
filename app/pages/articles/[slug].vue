@@ -1,73 +1,83 @@
 <script setup lang="ts">
-import { articles, getArticleBySlug } from "~~/shared/articles";
-
+import type { ArticleCollection, ArticleDetail } from "~~/shared/content";
 const route = useRoute();
+const config = useRuntimeConfig();
+const site = useSiteSettings();
 const slug = String(route.params.slug ?? "");
-const article = getArticleBySlug(slug);
-
-if (!article) {
-  throw createError({ statusCode: 404, statusMessage: "Статья не найдена.", fatal: true });
-}
-
-const related = articles
-  .filter((item) => item.slug !== article.slug && item.category === article.category)
-  .slice(0, 3);
+const { data: article, error } = await useFetch<ArticleDetail>(`/api/articles/${encodeURIComponent(slug)}`);
+if (error.value || !article.value) throw createError({ statusCode: 404, statusMessage: "Статья не найдена.", fatal: true });
+const current = computed(() => article.value as ArticleDetail);
+const { data: relatedData } = await useFetch<ArticleCollection>("/api/articles", { query: { category: current.value.category }, default: () => ({ articles: [], categories: [] }) });
+const related = computed(() => (relatedData.value?.articles ?? []).filter((item) => item.slug !== current.value.slug).slice(0, 3));
+const siteUrl = String(config.public.siteUrl).replace(/\/$/, "");
+const canonical = `${siteUrl}/articles/${current.value.slug}`;
+const socialImage = current.value.cover.endsWith(".svg") ? `${siteUrl}/og-default.png` : `${siteUrl}${current.value.cover}`;
 
 useSeoMeta({
-  title: article.title,
-  description: article.summary,
-  ogTitle: article.title,
-  ogDescription: article.summary,
-  ogImage: article.image
+  title: current.value.title,
+  description: current.value.summary,
+  ogTitle: current.value.title,
+  ogDescription: current.value.summary,
+  ogImage: socialImage,
+  ogType: "article",
+  ogUrl: canonical,
+  articlePublishedTime: `${current.value.publishedAt}T09:00:00+03:00`,
+  articleModifiedTime: `${current.value.updatedAt}T09:00:00+03:00`
+});
+useHead({
+  link: [{ rel: "canonical", href: canonical }],
+  script: [{ type: "application/ld+json", innerHTML: JSON.stringify({
+    "@context": "https://schema.org", "@type": "Article", headline: current.value.title,
+    description: current.value.summary, image: socialImage,
+    datePublished: current.value.publishedAt, dateModified: current.value.updatedAt,
+    author: { "@type": "Person", name: current.value.author },
+    publisher: { "@type": "Organization", name: site.name, url: siteUrl },
+    mainEntityOfPage: canonical, inLanguage: "ru-RU"
+  }) }]
 });
 </script>
 
 <template>
-  <article class="container article-page">
-    <NuxtLink to="/articles" class="text-link">← Все статьи</NuxtLink>
-    <header class="article-hero">
-      <div>
-        <p class="eyebrow">{{ article.category }}</p>
-        <h1>{{ article.title }}</h1>
-        <p>{{ article.summary }}</p>
-        <div class="meta-row large">
-          <span>{{ article.author }}</span>
-          <span>{{ new Date(article.date).toLocaleDateString("ru-RU") }}</span>
-          <span>{{ article.readingTime }}</span>
+  <article class="article-page">
+    <div class="container">
+      <nav class="breadcrumbs" aria-label="Хлебные крошки">
+        <NuxtLink to="/">Главная</NuxtLink><span>→</span><NuxtLink to="/articles">Статьи</NuxtLink><span>→</span><span>{{ current.category }}</span>
+      </nav>
+      <header class="article-header">
+        <div class="article-heading-copy">
+          <p class="eyebrow">{{ current.category }}</p>
+          <h1>{{ current.title }}</h1>
+          <p class="article-deck">{{ current.summary }}</p>
+          <div class="article-meta">
+            <span>Автор: {{ current.author }}</span>
+            <time :datetime="current.publishedAt">{{ formatDate(current.publishedAt) }}</time>
+            <span>{{ current.readingTime }}</span>
+          </div>
         </div>
-      </div>
-      <img :src="article.image" alt="" />
-    </header>
+        <img :src="current.cover" :alt="`Обложка статьи: ${current.title}`" class="article-cover">
+      </header>
 
-    <div class="article-layout">
-      <aside class="article-aside">
-        <div class="sticky-note">
-          <h2>В статье</h2>
-          <a v-for="section in article.sections" :key="section.heading" :href="`#${section.heading}`">
-            {{ section.heading }}
-          </a>
-        </div>
-      </aside>
-      <div class="article-content">
-        <section v-for="section in article.sections" :id="section.heading" :key="section.heading">
-          <h2>{{ section.heading }}</h2>
-          <p v-for="paragraph in section.paragraphs" :key="paragraph">{{ paragraph }}</p>
-        </section>
-        <div class="note-box">
-          <strong>Совет редакции:</strong> делайте фотографии до и после работ. Это помогает сравнить результат, не забыть удачные решения и быстрее заметить повторяющиеся проблемы на участке.
+      <div class="article-layout">
+        <aside class="article-toc" aria-label="Содержание статьи">
+          <div class="toc-inner">
+            <strong>В этой статье</strong>
+            <a v-for="item in current.toc.filter((entry) => entry.level === 2)" :key="item.id" :href="`#${item.id}`">{{ item.text }}</a>
+          </div>
+        </aside>
+        <div class="article-body-wrap">
+          <div class="article-body" v-html="current.bodyHtml" />
+          <div class="article-disclaimer">
+            <strong>Учитывайте условия участка.</strong>
+            <p>Погода, почва, возраст растений и предыдущий уход меняют результат. Сначала проверяйте совет на небольшом участке или одном растении.</p>
+          </div>
         </div>
       </div>
     </div>
 
-    <section v-if="related.length > 0" class="section-block">
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow">Читайте также</p>
-          <h2>Похожие материалы</h2>
-        </div>
-      </div>
-      <div class="content-grid three">
-        <ArticleCard v-for="item in related" :key="item.slug" :article="item" compact />
+    <section v-if="related.length" class="related-section">
+      <div class="container">
+        <div class="section-header ruled"><div><p class="eyebrow">Продолжить чтение</p><h2>Материалы из раздела «{{ current.category }}»</h2></div></div>
+        <div class="article-list-grid"><ArticleCard v-for="item in related" :key="item.slug" :article="item" compact /></div>
       </div>
     </section>
   </article>

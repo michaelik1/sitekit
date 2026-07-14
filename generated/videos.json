@@ -1,0 +1,267 @@
+{
+  "videos": [
+    {
+      "id": "slizni-lovushki-i-profilaktika",
+      "title": "Слизни: ловушки и профилактика",
+      "description": "Рабочие укрытия-ловушки, сухие проходы и вечерний осмотр без лишней химии.",
+      "category": "Защита растений",
+      "author": "Илья Садов",
+      "publishedAt": "2026-05-16",
+      "duration": "00:08",
+      "quality": "HD",
+      "tags": [
+        "слизни",
+        "защита",
+        "рассада"
+      ],
+      "featured": false,
+      "placeholder": true,
+      "note": "Короткая видеозаметка-заставка. Полная версия материала готовится.",
+      "status": "published",
+      "poster": "/generated/videos/slizni-lovushki-i-profilaktika/poster.svg",
+      "src": "/generated/videos/slizni-lovushki-i-profilaktika/video.mp4"
+    },
+    {
+      "id": "mini-prud-mesto-i-rasteniya",
+      "title": "Мини-пруд: выбираем место и растения",
+      "description": "Показываем, где водоём меньше цветёт и какие растения проще всего приживаются.",
+      "category": "Благоустройство",
+      "author": "Наталья Ягодина",
+      "publishedAt": "2026-05-14",
+      "duration": "00:08",
+      "quality": "HD",
+      "tags": [
+        "пруд",
+        "растения",
+        "декор"
+      ],
+      "featured": false,
+      "placeholder": true,
+      "note": "Короткая видеозаметка-заставка. Полная версия материала готовится.",
+      "status": "published",
+      "poster": "/generated/videos/mini-prud-mesto-i-rasteniya/poster.svg",
+      "src": "/generated/videos/mini-prud-mesto-i-rasteniya/video.mp4"
+    },
+    {
+      "id": "rassada-prostaya-podsvetka",
+      "title": "Рассада на подоконнике: простая подсветка",
+      "description": "Высота лампы, отражатель, таймер и признаки, что света всё ещё мало.",
+      "category": "Рассада",
+      "author": "Редакция",
+      "publishedAt": "2026-05-12",
+      "duration": "00:08",
+      "quality": "HD",
+      "tags": [
+        "рассада",
+        "свет",
+        "подоконник"
+      ],
+      "featured": false,
+      "placeholder": true,
+      "note": "Короткая видеозаметка-заставка. Полная версия материала готовится.",
+      "status": "published",
+      "poster": "/generated/videos/rassada-prostaya-podsvetka/poster.svg",
+      "src": "/generated/videos/rassada-prostaya-podsvetka/video.mp4"
+    },
+    {
+      "id": "klubnika-posle-zimy-video",
+      "title": "Клубника после зимы: чистим и подкармливаем",
+      "description": "Убираем старый лист, рыхлим, мульчируем и не засыпаем сердечко куста.",
+      "category": "Сад",
+      "author": "Марина Лесная",
+      "publishedAt": "2026-05-10",
+      "duration": "00:08",
+      "quality": "HD",
+      "tags": [
+        "клубника",
+        "весна",
+        "ягоды"
+      ],
+      "featured": false,
+      "placeholder": true,
+      "note": "Короткая видеозаметка-заставка. Полная версия материала готовится.",
+      "status": "published",
+      "poster": "/generated/videos/klubnika-posle-zimy-video/poster.svg",
+      "src": "/generated/videos/klubnika-posle-zimy-video/video.mp4"
+    },
+    {
+      "id": "dorozhka-iz-shchebnya",
+      "title": "Дачная дорожка из щебня",
+      "description": "Разметка, геотекстиль, бордюр и засыпка для аккуратной дорожки без бетона.",
+      "category": "Благоустройство",
+      "author": "Павел Корнев",
+      "publishedAt": "2026-05-08",
+      "duration": "00:08",
+      "quality": "HD",
+      "tags": [
+        "дорожки",
+        "щебень",
+        "участок"
+      ],
+      "featured": true,
+      "placeholder": true,
+      "note": "Короткая видеозаметка-заставка. Полная версия материала готовится.",
+      "status": "published",
+      "poster": "/generated/videos/dorozhka-iz-shchebnya/poster.svg",
+      "src": "/generated/videos/dorozhka-iz-shchebnya/video.mp4"
+    },
+    {
+      "id": "provetrivanie-teplicy-v-zharu",
+      "title": "Проветривание теплицы в жару",
+      "description": "Когда открывать форточки, как снизить перегрев и почему сквозняк не всегда враг.",
+      "category": "Теплица",
+      "author": "Илья Садов",
+      "publishedAt": "2026-05-05",
+      "duration": "00:08",
+      "quality": "HD",
+      "tags": [
+        "теплица",
+        "жара",
+        "проветривание"
+      ],
+      "featured": false,
+      "placeholder": true,
+      "note": "Короткая видеозаметка-заставка. Полная версия материала готовится.",
+      "status": "published",
+      "poster": "/generated/videos/provetrivanie-teplicy-v-zharu/poster.svg",
+      "src": "/generated/videos/provetrivanie-teplicy-v-zharu/video.mp4"
+    },
+    {
+      "id": "mulcha-iz-skoshennoy-travy",
+      "title": "Мульча из скошенной травы: как не навредить",
+      "description": "Толщина слоя, подсушивание, обновление и ситуации, где траву лучше не класть.",
+      "category": "Огород",
+      "author": "Редакция",
+      "publishedAt": "2026-05-03",
+      "duration": "00:08",
+      "quality": "HD",
+      "tags": [
+        "мульча",
+        "трава",
+        "влага"
+      ],
+      "featured": false,
+      "placeholder": true,
+      "note": "Короткая видеозаметка-заставка. Полная версия материала готовится.",
+      "status": "published",
+      "poster": "/generated/videos/mulcha-iz-skoshennoy-travy/poster.svg",
+      "src": "/generated/videos/mulcha-iz-skoshennoy-travy/video.mp4"
+    },
+    {
+      "id": "obrezka-smorodiny",
+      "title": "Обрезка смородины: старые и молодые ветки",
+      "description": "На живом кусте показываем, что оставить, а что вырезать у самой земли.",
+      "category": "Сад",
+      "author": "Наталья Ягодина",
+      "publishedAt": "2026-05-01",
+      "duration": "00:08",
+      "quality": "HD",
+      "tags": [
+        "смородина",
+        "обрезка",
+        "ягодники"
+      ],
+      "featured": false,
+      "placeholder": true,
+      "note": "Короткая видеозаметка-заставка. Полная версия материала готовится.",
+      "status": "published",
+      "poster": "/generated/videos/obrezka-smorodiny/poster.svg",
+      "src": "/generated/videos/obrezka-smorodiny/video.mp4"
+    },
+    {
+      "id": "kompostnaya-kucha-bez-zapaha",
+      "title": "Компостная куча без запаха",
+      "description": "Смешиваем зелёные и коричневые слои, контролируем влажность и ускоряем созревание.",
+      "category": "Хозяйство",
+      "author": "Павел Корнев",
+      "publishedAt": "2026-04-28",
+      "duration": "00:08",
+      "quality": "HD",
+      "tags": [
+        "компост",
+        "органика",
+        "почва"
+      ],
+      "featured": true,
+      "placeholder": true,
+      "note": "Короткая видеозаметка-заставка. Полная версия материала готовится.",
+      "status": "published",
+      "poster": "/generated/videos/kompostnaya-kucha-bez-zapaha/poster.svg",
+      "src": "/generated/videos/kompostnaya-kucha-bez-zapaha/video.mp4"
+    },
+    {
+      "id": "podvyazka-tomatov-v-teplice",
+      "title": "Как подвязать томаты в теплице",
+      "description": "Верёвка, клипсы, шпалера и ошибки, из-за которых стебель перетирается.",
+      "category": "Теплица",
+      "author": "Редакция",
+      "publishedAt": "2026-04-25",
+      "duration": "00:08",
+      "quality": "HD",
+      "tags": [
+        "томаты",
+        "теплица",
+        "подвязка"
+      ],
+      "featured": false,
+      "placeholder": true,
+      "note": "Короткая видеозаметка-заставка. Полная версия материала готовится.",
+      "status": "published",
+      "poster": "/generated/videos/podvyazka-tomatov-v-teplice/poster.svg",
+      "src": "/generated/videos/podvyazka-tomatov-v-teplice/video.mp4"
+    },
+    {
+      "id": "vysokaya-gryadka-sloi",
+      "title": "Высокая грядка: сборка короба и слои",
+      "description": "Доска, защита от влаги, сетка от грызунов и правильное наполнение без перекоса.",
+      "category": "Грядки",
+      "author": "Марина Лесная",
+      "publishedAt": "2026-04-21",
+      "duration": "00:08",
+      "quality": "HD",
+      "tags": [
+        "грядки",
+        "почва",
+        "компост"
+      ],
+      "featured": true,
+      "placeholder": true,
+      "note": "Короткая видеозаметка-заставка. Полная версия материала готовится.",
+      "status": "published",
+      "poster": "/generated/videos/vysokaya-gryadka-sloi/poster.svg",
+      "src": "/generated/videos/vysokaya-gryadka-sloi/video.mp4"
+    },
+    {
+      "id": "kapelnyy-poliv-iz-bochki",
+      "title": "Капельный полив из бочки за один вечер",
+      "description": "Показываем базовую схему с фильтром, магистральной трубкой и лентами для трёх грядок.",
+      "category": "Полив",
+      "author": "Илья Садов",
+      "publishedAt": "2026-04-18",
+      "duration": "00:08",
+      "quality": "HD",
+      "tags": [
+        "полив",
+        "грядки",
+        "бочка"
+      ],
+      "featured": true,
+      "placeholder": true,
+      "note": "Короткая видеозаметка-заставка. Полная версия материала готовится.",
+      "status": "published",
+      "poster": "/generated/videos/kapelnyy-poliv-iz-bochki/poster.svg",
+      "src": "/generated/videos/kapelnyy-poliv-iz-bochki/video.mp4"
+    }
+  ],
+  "categories": [
+    "Благоустройство",
+    "Грядки",
+    "Защита растений",
+    "Огород",
+    "Полив",
+    "Рассада",
+    "Сад",
+    "Теплица",
+    "Хозяйство"
+  ]
+}
