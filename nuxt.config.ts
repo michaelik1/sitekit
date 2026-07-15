@@ -1,3 +1,5 @@
+const skipContentPrerender = process.env.SKIP_CONTENT_PRERENDER === "true";
+
 export default defineNuxtConfig({
   compatibilityDate: "2026-05-06",
   devtools: { enabled: process.env.NODE_ENV !== "production" },
@@ -26,10 +28,12 @@ export default defineNuxtConfig({
   },
   nitro: {
     compressPublicAssets: true,
-    prerender: {
-      crawlLinks: true,
-      routes: ["/", "/articles", "/videos", "/calendar", "/about", "/contacts", "/privacy", "/sitemap.xml", "/rss.xml", "/robots.txt"]
-    }
+    prerender: skipContentPrerender
+      ? { crawlLinks: false, routes: [] }
+      : {
+          crawlLinks: true,
+          routes: ["/", "/articles", "/videos", "/calendar", "/about", "/contacts", "/privacy", "/sitemap.xml", "/rss.xml", "/robots.txt"]
+        }
   },
   typescript: { strict: true }
 });

@@ -581,6 +581,12 @@ async function writeJsonAtomic(path, value) {
   await rename(temp, path);
 }
 
+async function emptyDirectory(path) {
+  await mkdir(path, { recursive: true });
+  const entries = await readdir(path);
+  await Promise.all(entries.map((entry) => rm(join(path, entry), { recursive: true, force: true })));
+}
+
 async function main() {
   const siteFile = join(contentRoot, 'site.json');
   const site = JSON.parse(await readFile(siteFile, 'utf8'));
@@ -588,10 +594,8 @@ async function main() {
   validateSiteSettings(site, siteFile);
 
   if (!checkOnly) {
-    await rm(publicGeneratedRoot, { recursive: true, force: true });
-    await mkdir(publicGeneratedRoot, { recursive: true });
-    await rm(videoFilesRoot, { recursive: true, force: true });
-    await mkdir(videoFilesRoot, { recursive: true });
+    await emptyDirectory(publicGeneratedRoot);
+    await emptyDirectory(videoFilesRoot);
   }
 
   const [articles, videos] = await Promise.all([buildArticles(), buildVideos()]);

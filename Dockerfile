@@ -3,7 +3,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci --no-audit --no-fund
 COPY . .
-RUN npm run build
+RUN SKIP_CONTENT_PRERENDER=true node ./node_modules/@nuxt/cli/bin/nuxi.mjs build
 
 FROM node:22.18-bookworm-slim AS runtime
 ENV NODE_ENV=production \
@@ -11,7 +11,7 @@ ENV NODE_ENV=production \
     PORT=3000
 WORKDIR /app
 COPY --from=build --chown=node:node /app/.output ./.output
-COPY --from=build --chown=node:node /app/_videofiles ./_videofiles
+COPY --from=build --chown=node:node /app/scripts/prepare-content.mjs ./scripts/prepare-content.mjs
 USER node
 EXPOSE 3000
 STOPSIGNAL SIGTERM

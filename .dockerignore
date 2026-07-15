@@ -7,3 +7,7 @@ npm-debug.log*
 .env.*
 !.env.example
 README.md
+content/
+generated/
+public/generated/
+_videofiles/
