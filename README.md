@@ -98,7 +98,7 @@ Video binaries are deliberately not stored in Git. Their names, sizes and SHA-25
 
 Before the first deployment, upload every object from the manifest to private HTTPS storage at the same relative path. For example, `videos/podvyazka-tomatov-v-teplice/video.mp4` must be available as `<DECOY_MEDIA_BASE_URL>/videos/podvyazka-tomatov-v-teplice/video.mp4`.
 
-Set `DECOY_MEDIA_BASE_URL` in `decoy/.env` and, when the storage accepts bearer authentication, set `DECOY_MEDIA_TOKEN` there too. Then download and verify all videos:
+Cloudflare R2 is supported directly. Set `DECOY_R2_ENDPOINT`, `DECOY_R2_BUCKET`, `DECOY_R2_ACCESS_KEY_ID` and `DECOY_R2_SECRET_ACCESS_KEY` in `decoy/.env`. Use an Object Read & Write key only for uploading; deployment servers need a separate Object Read-only key. Then download and verify all videos:
 
 ```bash
 make decoy-media-sync
@@ -111,6 +111,7 @@ When adding or replacing video locally, upload it to storage and run this before
 ```bash
 cd decoy
 npm run media:manifest
+npm run media:upload:r2
 ```
 
 Commit the updated manifest, config and poster — never the video binary.
