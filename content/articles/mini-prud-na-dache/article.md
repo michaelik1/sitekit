@@ -6,7 +6,7 @@ publishedAt: "2026-04-30"
 updatedAt: "2026-04-30"
 readingTime: "8 мин"
 author: "Сергей Мельников"
-cover: "cover.svg"
+cover: "cover"
 featured: false
 status: "published"
 tags: ["Благоустройство", "инструкция", "сезонные работы"]

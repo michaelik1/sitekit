@@ -6,7 +6,7 @@ publishedAt: "2026-05-31"
 updatedAt: "2026-05-31"
 readingTime: "7 мин"
 author: "Редакция «Дача Практик»"
-cover: "cover.svg"
+cover: "cover"
 featured: false
 status: "published"
 tags: ["компост", "осень", "органика"]

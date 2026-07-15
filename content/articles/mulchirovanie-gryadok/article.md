@@ -6,7 +6,7 @@ publishedAt: "2026-02-11"
 updatedAt: "2026-02-11"
 readingTime: "5 мин"
 author: "Анна Воронцова"
-cover: "cover.svg"
+cover: "cover"
 featured: false
 status: "published"
 tags: ["Огород", "инструкция", "сезонные работы"]

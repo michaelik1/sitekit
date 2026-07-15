@@ -6,7 +6,7 @@ publishedAt: "2026-07-14"
 updatedAt: "2026-07-14"
 readingTime: "7 мин"
 author: "Анна Воронцова"
-cover: "cover.svg"
+cover: "cover"
 featured: true
 status: "published"
 tags: ["томаты", "полив", "кальций"]

@@ -6,7 +6,7 @@ publishedAt: "2026-07-06"
 updatedAt: "2026-07-06"
 readingTime: "7 мин"
 author: "Редакция «Дача Практик»"
-cover: "cover.svg"
+cover: "cover"
 featured: true
 status: "published"
 tags: ["яблоня", "полив", "плодовые"]

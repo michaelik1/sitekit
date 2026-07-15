@@ -6,7 +6,7 @@ publishedAt: "2026-02-23"
 updatedAt: "2026-02-23"
 readingTime: "7 мин"
 author: "Ирина Полевая"
-cover: "cover.svg"
+cover: "cover"
 featured: false
 status: "published"
 tags: ["Теплица", "инструкция", "сезонные работы"]

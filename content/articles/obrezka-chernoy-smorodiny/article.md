@@ -6,7 +6,7 @@ publishedAt: "2026-04-06"
 updatedAt: "2026-04-06"
 readingTime: "9 мин"
 author: "Сергей Мельников"
-cover: "cover.svg"
+cover: "cover"
 featured: true
 status: "published"
 tags: ["Сад", "инструкция", "сезонные работы"]

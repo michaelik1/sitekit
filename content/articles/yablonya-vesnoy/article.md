@@ -6,7 +6,7 @@ publishedAt: "2026-04-12"
 updatedAt: "2026-04-12"
 readingTime: "5 мин"
 author: "Ирина Полевая"
-cover: "cover.svg"
+cover: "cover"
 featured: false
 status: "published"
 tags: ["Сад", "инструкция", "сезонные работы"]

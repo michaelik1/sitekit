@@ -6,7 +6,7 @@ publishedAt: "2026-06-04"
 updatedAt: "2026-06-04"
 readingTime: "7 мин"
 author: "Сергей Мельников"
-cover: "cover.svg"
+cover: "cover"
 featured: false
 status: "published"
 tags: ["чек-лист", "полив", "отпуск"]

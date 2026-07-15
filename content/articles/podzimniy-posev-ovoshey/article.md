@@ -6,7 +6,7 @@ publishedAt: "2026-06-08"
 updatedAt: "2026-06-08"
 readingTime: "7 мин"
 author: "Анна Воронцова"
-cover: "cover.svg"
+cover: "cover"
 featured: false
 status: "published"
 tags: ["подзимний посев", "морковь", "зелень"]

@@ -6,7 +6,7 @@ publishedAt: "2026-02-17"
 updatedAt: "2026-02-17"
 readingTime: "6 мин"
 author: "Сергей Мельников"
-cover: "cover.svg"
+cover: "cover"
 featured: true
 status: "published"
 tags: ["Теплица", "инструкция", "сезонные работы"]

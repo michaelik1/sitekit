@@ -6,7 +6,7 @@ publishedAt: "2026-06-05"
 updatedAt: "2026-06-05"
 readingTime: "9 мин"
 author: "Редакция «Дача Практик»"
-cover: "cover.svg"
+cover: "cover"
 featured: false
 status: "published"
 tags: ["Огород", "инструкция", "сезонные работы"]

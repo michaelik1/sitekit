@@ -6,7 +6,7 @@ publishedAt: "2026-03-31"
 updatedAt: "2026-03-31"
 readingTime: "8 мин"
 author: "Анна Воронцова"
-cover: "cover.svg"
+cover: "cover"
 featured: false
 status: "published"
 tags: ["Благоустройство", "инструкция", "сезонные работы"]

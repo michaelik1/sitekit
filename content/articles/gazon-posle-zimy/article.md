@@ -6,7 +6,7 @@ publishedAt: "2026-03-19"
 updatedAt: "2026-03-19"
 readingTime: "6 мин"
 author: "Ирина Полевая"
-cover: "cover.svg"
+cover: "cover"
 featured: false
 status: "published"
 tags: ["Благоустройство", "инструкция", "сезонные работы"]

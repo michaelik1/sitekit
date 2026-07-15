@@ -6,7 +6,7 @@ publishedAt: "2026-06-24"
 updatedAt: "2026-06-24"
 readingTime: "7 мин"
 author: "Редакция «Дача Практик»"
-cover: "cover.svg"
+cover: "cover"
 featured: false
 status: "published"
 tags: ["картофель", "погреб", "хранение"]

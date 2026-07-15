@@ -6,7 +6,7 @@ publishedAt: "2026-07-10"
 updatedAt: "2026-07-10"
 readingTime: "7 мин"
 author: "Сергей Мельников"
-cover: "cover.svg"
+cover: "cover"
 featured: true
 status: "published"
 tags: ["томаты", "фитофтора", "профилактика"]

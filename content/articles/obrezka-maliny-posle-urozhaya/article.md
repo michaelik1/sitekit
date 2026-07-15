@@ -6,7 +6,7 @@ publishedAt: "2026-06-12"
 updatedAt: "2026-06-12"
 readingTime: "7 мин"
 author: "Редакция «Дача Практик»"
-cover: "cover.svg"
+cover: "cover"
 featured: false
 status: "published"
 tags: ["малина", "обрезка", "ягодники"]

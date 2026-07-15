@@ -6,7 +6,7 @@ publishedAt: "2026-07-02"
 updatedAt: "2026-07-02"
 readingTime: "7 мин"
 author: "Анна Воронцова"
-cover: "cover.svg"
+cover: "cover"
 featured: false
 status: "published"
 tags: ["смородина", "ягодники", "летний уход"]

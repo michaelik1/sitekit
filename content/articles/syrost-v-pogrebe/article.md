@@ -6,7 +6,7 @@ publishedAt: "2026-04-24"
 updatedAt: "2026-04-24"
 readingTime: "7 мин"
 author: "Анна Воронцова"
-cover: "cover.svg"
+cover: "cover"
 featured: false
 status: "published"
 tags: ["Хозяйство", "инструкция", "сезонные работы"]
