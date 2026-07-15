@@ -16,6 +16,7 @@ export default defineNuxtConfig({
   },
   routeRules: {
     "/generated/**": { headers: { "cache-control": "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800" } },
+    "/stream/**": { headers: { "cache-control": "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800" } },
     "/favicon.svg": { headers: { "cache-control": "public, max-age=86400" } },
     "/og-default.svg": { headers: { "cache-control": "public, max-age=86400" } },
     "/og-default.png": { headers: { "cache-control": "public, max-age=86400" } },

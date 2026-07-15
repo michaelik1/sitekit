@@ -10,7 +10,7 @@ const { data: collection } = await useFetch<VideoCollection>("/api/videos", { qu
 const related = computed(() => (collection.value?.videos ?? []).filter((item) => item.id !== current.value.id).slice(0, 3));
 const siteUrl = String(config.public.siteUrl).replace(/\/$/, "");
 const canonical = `${siteUrl}/videos/${current.value.id}`;
-const videoMime = computed(() => current.value.src.toLowerCase().endsWith(".webm") ? "video/webm" : "video/mp4");
+const videoMime = computed(() => current.value.src.toLowerCase().endsWith('.webm') ? 'video/webm' : 'video/mp4');
 useSeoMeta({ title: current.value.title, description: current.value.description, ogTitle: current.value.title, ogDescription: current.value.description, ogImage: current.value.poster.endsWith(".svg") ? `${siteUrl}/og-default.png` : `${siteUrl}${current.value.poster}`, ogUrl: canonical });
 useHead({ link: [{ rel: "canonical", href: canonical }] });
 </script>

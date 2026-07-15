@@ -1,4 +1,4 @@
-import { cp, mkdir, readdir, readFile, rename, rm, stat, writeFile } from 'node:fs/promises';
+import { cp, mkdir, open, readdir, readFile, rename, rm, stat, writeFile } from 'node:fs/promises';
 import { basename, dirname, extname, join, normalize, relative, resolve, sep } from 'node:path';
 import process from 'node:process';
 
@@ -6,11 +6,14 @@ const root = resolve(import.meta.dirname, '..');
 const contentRoot = join(root, 'content');
 const generatedRoot = join(root, 'generated');
 const publicGeneratedRoot = join(root, 'public', 'generated');
+// Video binaries are stored outside public/ so they are served only through the
+// server route that supports Range requests (HTTP 206). This enables browser streaming.
+const videoFilesRoot = join(root, '_videofiles');
 const checkOnly = process.argv.includes('--check');
 const todayUtc = process.env.CONTENT_TODAY ?? new Date().toISOString().slice(0, 10);
 
 const REQUIRED_ARTICLE_FIELDS = ['title', 'summary', 'category', 'publishedAt', 'author'];
-const REQUIRED_VIDEO_FIELDS = ['title', 'description', 'category', 'publishedAt', 'video', 'poster'];
+const REQUIRED_VIDEO_FIELDS = ['title', 'description', 'category', 'publishedAt'];
 
 function parseYamlScalar(raw, file, lineNumber) {
   const value = raw.trim();
@@ -111,6 +114,121 @@ function safeLocalAsset(rawPath, baseDir, file) {
   const rel = relative(baseDir, absolute);
   if (rel.startsWith('..') || rel.split(sep).includes('..')) fail(`${file}: недопустимый путь к ресурсу "${rawPath}".`);
   return { clean: rel.split(sep).join('/'), absolute };
+}
+
+/**
+ * Resolves an asset path relative to baseDir.
+ * - If rawName already contains an extension that matches one of allowedExts, returns it directly.
+ * - Otherwise treats rawName as a stem and scans the directory for the first file whose
+ *   basename (without extension) matches the stem and whose extension is in allowedExts.
+ * Returns { clean, absolute } or null if nothing found.
+ */
+async function resolveAssetFuzzy(rawName, baseDir, allowedExts, file) {
+  const stem = rawName.split(/[?#]/, 1)[0].replace(/^\.\//, '').replace(/\\/g, '/');
+  if (!stem || stem.startsWith('/') || stem.includes('://')) return null;
+  const absolute = resolve(baseDir, stem);
+  const rel = relative(baseDir, absolute);
+  if (rel.startsWith('..') || rel.split(sep).includes('..')) fail(`${file}: недопустимый путь к ресурсу "${rawName}".`);
+  // If the provided name already has an allowed extension, use it directly.
+  if (allowedExts.has(extname(stem).toLowerCase())) {
+    return { clean: rel.split(sep).join('/'), absolute };
+  }
+  // Otherwise treat as a stem and search the containing directory.
+  const containingDir = resolve(baseDir, stem, '..');
+  const stemBase = basename(stem);
+  let entries;
+  try { entries = await readdir(containingDir, { withFileTypes: true }); } catch { return null; }
+  for (const entry of entries) {
+    if (!entry.isFile()) continue;
+    const ext = extname(entry.name).toLowerCase();
+    const nameNoExt = entry.name.slice(0, entry.name.length - ext.length);
+    if (nameNoExt === stemBase && allowedExts.has(ext)) {
+      const foundAbs = join(containingDir, entry.name);
+      const foundRel = relative(baseDir, foundAbs);
+      return { clean: foundRel.split(sep).join('/'), absolute: foundAbs };
+    }
+  }
+  return null;
+}
+
+/**
+ * Reads the duration of an MP4 file by parsing the mvhd box without any external dependencies.
+ * Returns a "MM:SS" string, or null if parsing fails.
+ *
+ * mvhd box layout (after the 8-byte box header already consumed by dataStart):
+ *   version 0 (32-bit):  flags(4) + creation(4) + modification(4) + timescale(4) + duration(4)
+ *   version 1 (64-bit):  flags(4) + creation(8) + modification(8) + timescale(4) + duration(8)
+ */
+async function readMp4Duration(absolutePath) {
+  let fh;
+  try {
+    fh = await open(absolutePath, 'r');
+    const fileSize = (await fh.stat()).size;
+    const readUint32 = async (pos) => {
+      const buf = Buffer.allocUnsafe(4);
+      const { bytesRead } = await fh.read(buf, 0, 4, pos);
+      if (bytesRead < 4) throw new Error('eof');
+      return buf.readUInt32BE(0);
+    };
+    const readBox = async (pos) => {
+      if (pos + 8 > fileSize) return null;
+      const size = await readUint32(pos);
+      const typeBuf = Buffer.allocUnsafe(4);
+      await fh.read(typeBuf, 0, 4, pos + 4);
+      const type = typeBuf.toString('ascii');
+      const boxSize = size === 0 ? fileSize - pos : size;
+      return { type, size: boxSize, dataStart: pos + 8 };
+    };
+    // Find moov at top level.
+    let pos = 0;
+    let moovStart = -1;
+    let moovSize = 0;
+    while (pos < fileSize) {
+      const box = await readBox(pos);
+      if (!box || box.size < 8) break;
+      if (box.type === 'moov') { moovStart = box.dataStart; moovSize = box.size - 8; break; }
+      pos += box.size;
+    }
+    if (moovStart < 0) return null;
+    // Find mvhd inside moov.
+    pos = moovStart;
+    const moovEnd = moovStart + moovSize;
+    while (pos < moovEnd) {
+      const box = await readBox(pos);
+      if (!box || box.size < 8) break;
+      if (box.type === 'mvhd') {
+        // Read enough bytes to cover both version layouts
+        const header = Buffer.allocUnsafe(28);
+        await fh.read(header, 0, 28, box.dataStart);
+        const version = header[0];
+        let timescale, durationRaw;
+        if (version === 1) {
+          // 64-bit: flags(4) + creation(8) + modification(8) + timescale(4) + duration(8)
+          timescale = header.readUInt32BE(20);
+          const durHigh = header.readUInt32BE(24);
+          const extra = Buffer.allocUnsafe(4);
+          await fh.read(extra, 0, 4, box.dataStart + 28);
+          const durLow = extra.readUInt32BE(0);
+          durationRaw = durHigh * 0x100000000 + durLow;
+        } else {
+          // 32-bit: flags(4) + creation(4) + modification(4) + timescale(4) + duration(4)
+          timescale = header.readUInt32BE(12);
+          durationRaw = header.readUInt32BE(16);
+        }
+        if (!timescale) return null;
+        const totalSeconds = Math.round(durationRaw / timescale);
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+      }
+      pos += box.size;
+    }
+    return null;
+  } catch {
+    return null;
+  } finally {
+    await fh?.close();
+  }
 }
 
 function inlineMarkdown(text, assetResolver) {
@@ -306,7 +424,7 @@ async function listDirectories(path) {
   return entries.filter((entry) => entry.isDirectory() && !entry.name.startsWith('.')).map((entry) => entry.name).sort();
 }
 
-async function copyFolderAssets(sourceDir, destinationDir, exclude = new Set()) {
+async function copyFolderAssets(sourceDir, destinationDir, exclude = new Set(), excludeExts = new Set()) {
   await mkdir(destinationDir, { recursive: true });
   const entries = await readdir(sourceDir, { withFileTypes: true });
   for (const entry of entries) {
@@ -314,9 +432,12 @@ async function copyFolderAssets(sourceDir, destinationDir, exclude = new Set()) 
     const sourcePath = join(sourceDir, entry.name);
     const destinationPath = join(destinationDir, entry.name);
     if (entry.isDirectory()) {
-      await copyFolderAssets(sourcePath, destinationPath, exclude);
-    } else if (ALLOWED_ASSET_EXTENSIONS.has(extname(entry.name).toLowerCase())) {
-      await cp(sourcePath, destinationPath);
+      await copyFolderAssets(sourcePath, destinationPath, exclude, excludeExts);
+    } else {
+      const ext = extname(entry.name).toLowerCase();
+      if (ALLOWED_ASSET_EXTENSIONS.has(ext) && !excludeExts.has(ext)) {
+        await cp(sourcePath, destinationPath);
+      }
     }
   }
 }
@@ -396,16 +517,29 @@ async function buildVideos() {
     const status = parseStatus(data.status, file);
     const publishedAt = parseDate(data.publishedAt, 'publishedAt', file);
     validatePublishedDate(publishedAt, status, file);
-    const videoAsset = safeLocalAsset(data.video, videoDir, file);
-    const posterAsset = safeLocalAsset(data.poster, videoDir, file);
-    if (!videoAsset || !posterAsset) fail(`${file}: video и poster должны быть локальными файлами.`);
-    if (!VIDEO_EXTENSIONS.has(extname(videoAsset.clean).toLowerCase())) fail(`${file}: video должен быть MP4 или WebM.`);
-    if (!IMAGE_EXTENSIONS.has(extname(posterAsset.clean).toLowerCase())) fail(`${file}: poster должен быть изображением.`);
-    for (const asset of [videoAsset, posterAsset]) {
-      const assetStats = await stat(asset.absolute).catch(() => null);
-      if (!assetStats?.isFile()) fail(`${file}: файл "${asset.clean}" не найден.`);
+
+    // Resolve video asset: default to "video.mp4"; accepts name with or without extension.
+    const videoRaw = typeof data.video === 'string' && data.video.trim() ? data.video.trim() : 'video';
+    const videoAsset = await resolveAssetFuzzy(videoRaw, videoDir, VIDEO_EXTENSIONS, file);
+    if (!videoAsset) fail(`${file}: видео-файл "${videoRaw}" не найден (поддерживаются: ${[...VIDEO_EXTENSIONS].join(', ')}).`);
+
+    // Resolve poster asset: default to "poster"; accepts name with or without extension.
+    const posterRaw = typeof data.poster === 'string' && data.poster.trim() ? data.poster.trim() : 'poster';
+    const posterAsset = await resolveAssetFuzzy(posterRaw, videoDir, IMAGE_EXTENSIONS, file);
+    if (!posterAsset) fail(`${file}: постер "${posterRaw}" не найден (поддерживаются: ${[...IMAGE_EXTENSIONS].join(', ')}).`);
+
+    // Auto-detect duration from MP4 if not specified in config.
+    let duration;
+    if (typeof data.duration === 'string' && data.duration.trim()) {
+      duration = data.duration.trim();
+    } else {
+      const detected = await readMp4Duration(videoAsset.absolute);
+      duration = detected ?? '—';
     }
+
     const publicBase = `/generated/videos/${slug}`;
+    // Video src goes through the server range-request route (/_videofiles/…)
+    const srcPath = `/stream/${slug}/${videoAsset.clean}`;
     videos.push({
       id: slug,
       title: asString(data.title, 'title', file),
@@ -413,7 +547,7 @@ async function buildVideos() {
       category: asString(data.category, 'category', file),
       author: typeof data.author === 'string' && data.author.trim() ? data.author.trim() : 'Редакция «Дача Практик»',
       publishedAt,
-      duration: typeof data.duration === 'string' ? data.duration : '—',
+      duration,
       quality: typeof data.quality === 'string' ? data.quality : 'HD',
       tags: Array.isArray(data.tags) ? data.tags.map(String).map((item) => item.trim()).filter(Boolean) : [],
       featured: data.featured === true,
@@ -421,9 +555,17 @@ async function buildVideos() {
       note: typeof data.note === 'string' ? data.note.trim() : '',
       status,
       poster: `${publicBase}/${posterAsset.clean}`,
-      src: `${publicBase}/${videoAsset.clean}`,
+      src: srcPath,
     });
-    if (!checkOnly && status === 'published') await copyFolderAssets(videoDir, join(outputRoot, slug), new Set(['config.yml']));
+
+    if (!checkOnly && status === 'published') {
+      // Copy poster and other non-video assets to public/generated/videos/{slug}/
+      await copyFolderAssets(videoDir, join(outputRoot, slug), new Set(['config.yml']), VIDEO_EXTENSIONS);
+      // Copy video binary to _videofiles/{slug}/ (served via streaming route)
+      const videoFilesDir = join(videoFilesRoot, slug);
+      await mkdir(videoFilesDir, { recursive: true });
+      await cp(videoAsset.absolute, join(videoFilesDir, videoAsset.clean));
+    }
   }
 
   const published = videos.filter((video) => video.status === 'published').sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
@@ -448,6 +590,8 @@ async function main() {
   if (!checkOnly) {
     await rm(publicGeneratedRoot, { recursive: true, force: true });
     await mkdir(publicGeneratedRoot, { recursive: true });
+    await rm(videoFilesRoot, { recursive: true, force: true });
+    await mkdir(videoFilesRoot, { recursive: true });
   }
 
   const [articles, videos] = await Promise.all([buildArticles(), buildVideos()]);

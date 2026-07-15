@@ -19,7 +19,7 @@
       "note": "Короткая видеозаметка-заставка. Полная версия материала готовится.",
       "status": "published",
       "poster": "/generated/videos/slizni-lovushki-i-profilaktika/poster.svg",
-      "src": "/generated/videos/slizni-lovushki-i-profilaktika/video.mp4"
+      "src": "/stream/slizni-lovushki-i-profilaktika/video.mp4"
     },
     {
       "id": "mini-prud-mesto-i-rasteniya",
@@ -40,7 +40,7 @@
       "note": "Короткая видеозаметка-заставка. Полная версия материала готовится.",
       "status": "published",
       "poster": "/generated/videos/mini-prud-mesto-i-rasteniya/poster.svg",
-      "src": "/generated/videos/mini-prud-mesto-i-rasteniya/video.mp4"
+      "src": "/stream/mini-prud-mesto-i-rasteniya/video.mp4"
     },
     {
       "id": "rassada-prostaya-podsvetka",
@@ -61,7 +61,7 @@
       "note": "Короткая видеозаметка-заставка. Полная версия материала готовится.",
       "status": "published",
       "poster": "/generated/videos/rassada-prostaya-podsvetka/poster.svg",
-      "src": "/generated/videos/rassada-prostaya-podsvetka/video.mp4"
+      "src": "/stream/rassada-prostaya-podsvetka/video.mp4"
     },
     {
       "id": "klubnika-posle-zimy-video",
@@ -82,7 +82,7 @@
       "note": "Короткая видеозаметка-заставка. Полная версия материала готовится.",
       "status": "published",
       "poster": "/generated/videos/klubnika-posle-zimy-video/poster.svg",
-      "src": "/generated/videos/klubnika-posle-zimy-video/video.mp4"
+      "src": "/stream/klubnika-posle-zimy-video/video.mp4"
     },
     {
       "id": "dorozhka-iz-shchebnya",
@@ -91,7 +91,7 @@
       "category": "Благоустройство",
       "author": "Павел Корнев",
       "publishedAt": "2026-05-08",
-      "duration": "00:08",
+      "duration": "05:17",
       "quality": "HD",
       "tags": [
         "дорожки",
@@ -100,10 +100,10 @@
       ],
       "featured": true,
       "placeholder": true,
-      "note": "Короткая видеозаметка-заставка. Полная версия материала готовится.",
+      "note": "",
       "status": "published",
-      "poster": "/generated/videos/dorozhka-iz-shchebnya/poster.svg",
-      "src": "/generated/videos/dorozhka-iz-shchebnya/video.mp4"
+      "poster": "/generated/videos/dorozhka-iz-shchebnya/poster.png",
+      "src": "/stream/dorozhka-iz-shchebnya/video.mp4"
     },
     {
       "id": "provetrivanie-teplicy-v-zharu",
@@ -124,7 +124,7 @@
       "note": "Короткая видеозаметка-заставка. Полная версия материала готовится.",
       "status": "published",
       "poster": "/generated/videos/provetrivanie-teplicy-v-zharu/poster.svg",
-      "src": "/generated/videos/provetrivanie-teplicy-v-zharu/video.mp4"
+      "src": "/stream/provetrivanie-teplicy-v-zharu/video.mp4"
     },
     {
       "id": "mulcha-iz-skoshennoy-travy",
@@ -145,7 +145,7 @@
       "note": "Короткая видеозаметка-заставка. Полная версия материала готовится.",
       "status": "published",
       "poster": "/generated/videos/mulcha-iz-skoshennoy-travy/poster.svg",
-      "src": "/generated/videos/mulcha-iz-skoshennoy-travy/video.mp4"
+      "src": "/stream/mulcha-iz-skoshennoy-travy/video.mp4"
     },
     {
       "id": "obrezka-smorodiny",
@@ -166,7 +166,7 @@
       "note": "Короткая видеозаметка-заставка. Полная версия материала готовится.",
       "status": "published",
       "poster": "/generated/videos/obrezka-smorodiny/poster.svg",
-      "src": "/generated/videos/obrezka-smorodiny/video.mp4"
+      "src": "/stream/obrezka-smorodiny/video.mp4"
     },
     {
       "id": "kompostnaya-kucha-bez-zapaha",
@@ -187,7 +187,7 @@
       "note": "Короткая видеозаметка-заставка. Полная версия материала готовится.",
       "status": "published",
       "poster": "/generated/videos/kompostnaya-kucha-bez-zapaha/poster.svg",
-      "src": "/generated/videos/kompostnaya-kucha-bez-zapaha/video.mp4"
+      "src": "/stream/kompostnaya-kucha-bez-zapaha/video.mp4"
     },
     {
       "id": "podvyazka-tomatov-v-teplice",
@@ -208,7 +208,7 @@
       "note": "Короткая видеозаметка-заставка. Полная версия материала готовится.",
       "status": "published",
       "poster": "/generated/videos/podvyazka-tomatov-v-teplice/poster.svg",
-      "src": "/generated/videos/podvyazka-tomatov-v-teplice/video.mp4"
+      "src": "/stream/podvyazka-tomatov-v-teplice/video.mp4"
     },
     {
       "id": "vysokaya-gryadka-sloi",
@@ -229,7 +229,7 @@
       "note": "Короткая видеозаметка-заставка. Полная версия материала готовится.",
       "status": "published",
       "poster": "/generated/videos/vysokaya-gryadka-sloi/poster.svg",
-      "src": "/generated/videos/vysokaya-gryadka-sloi/video.mp4"
+      "src": "/stream/vysokaya-gryadka-sloi/video.mp4"
     },
     {
       "id": "kapelnyy-poliv-iz-bochki",
@@ -250,7 +250,7 @@
       "note": "Короткая видеозаметка-заставка. Полная версия материала готовится.",
       "status": "published",
       "poster": "/generated/videos/kapelnyy-poliv-iz-bochki/poster.svg",
-      "src": "/generated/videos/kapelnyy-poliv-iz-bochki/video.mp4"
+      "src": "/stream/kapelnyy-poliv-iz-bochki/video.mp4"
     }
   ],
   "categories": [

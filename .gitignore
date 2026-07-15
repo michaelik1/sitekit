@@ -18,3 +18,6 @@ pnpm-debug.log*
 
 # system
 .DS_Store
+
+# generated video binaries (served via /stream/ route with Range support)
+_videofiles

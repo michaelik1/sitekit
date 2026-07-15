@@ -11,6 +11,7 @@ ENV NODE_ENV=production \
     PORT=3000
 WORKDIR /app
 COPY --from=build --chown=node:node /app/.output ./.output
+COPY --from=build --chown=node:node /app/_videofiles ./_videofiles
 USER node
 EXPOSE 3000
 STOPSIGNAL SIGTERM
