@@ -45,13 +45,14 @@ content/videos/poliv-teplicy/
 
 ## Video storage
 
-`video.mp4`, `video.webm`, article covers and video posters are not committed to Git. Keep them locally while editing, upload them to the configured private media storage and update the tracked manifest from the `decoy/` directory:
+`video.mp4`, `video.webm`, article covers and video posters are not committed to Git. Keep them locally while editing, update the tracked manifest and upload them to the configured private media storage from the `decoy/` directory:
 
 ```bash
 npm run media:manifest
+docker compose run --rm --build media-upload
 ```
 
-On a new server, configure `DECOY_MEDIA_BASE_URL` (and optionally `DECOY_MEDIA_TOKEN`) in `.env`, then run `docker compose run --rm --build media-sync` before building the decoy. Node.js and npm are contained in the one-off Docker service and are not required on the host. Each file is checked against its SHA-256 checksum in `content/media-manifest.json`.
+On a new server, configure `DECOY_R2_*` values in `.env`, then run `docker compose run --rm --build media-sync` before building the decoy. Node.js and npm are contained in the one-off Docker service and are not required on the host. Each file is checked against its SHA-256 checksum in `content/media-manifest.json`.
 
 ## Проверка
 

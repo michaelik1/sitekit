@@ -98,7 +98,7 @@ Video binaries and cover images are deliberately not stored in Git. Their names,
 
 Before the first deployment, upload every object from the manifest to private HTTPS storage at the same relative path. For example, `videos/podvyazka-tomatov-v-teplice/video.mp4` must be available as `<DECOY_MEDIA_BASE_URL>/videos/podvyazka-tomatov-v-teplice/video.mp4`.
 
-Cloudflare R2 is supported directly. Set `DECOY_R2_ENDPOINT`, `DECOY_R2_BUCKET`, `DECOY_R2_ACCESS_KEY_ID` and `DECOY_R2_SECRET_ACCESS_KEY` in `decoy/.env`. Use an Object Read & Write key only for uploading; deployment servers need a separate Object Read-only key. On the deployment server Node.js and npm are not required: the S3 client runs in a one-off Docker container. Then download and verify all videos:
+Cloudflare R2 is supported directly. Set `DECOY_R2_ENDPOINT`, `DECOY_R2_BUCKET`, `DECOY_R2_ACCESS_KEY_ID` and `DECOY_R2_SECRET_ACCESS_KEY` in `decoy/.env`. Use an Object Read & Write key only for uploading; deployment servers need a separate Object Read-only key. Node.js and npm are not required on the host: Docker runs both media tools. Then download and verify all decoy media:
 
 ```bash
 docker compose run --rm --build media-sync
@@ -111,7 +111,7 @@ When adding or replacing video locally, upload it to storage and run this before
 ```bash
 cd decoy
 npm run media:manifest
-npm run media:upload:r2
+docker compose run --rm --build media-upload
 ```
 
 Commit the updated manifest, config and poster — never the video binary.

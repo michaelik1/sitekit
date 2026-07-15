@@ -3,20 +3,27 @@ networks:
     external: true
 
 x-decoy-image: &decoy-image decoy:latest
+x-media-tool: &media-tool
+  build:
+    context: .
+    target: media-tools
+  image: decoy-media-tools:latest
+  profiles: ["tools"]
+  env_file:
+    - .env
+  user: "0:0"
+  restart: "no"
+  volumes:
+    - ./content:/app/content
 
 services:
   media-sync:
-    build:
-      context: .
-      target: media-sync
-    image: decoy-media-sync:latest
-    profiles: ["tools"]
-    env_file:
-      - .env
-    user: "0:0"
-    restart: "no"
-    volumes:
-      - ./content:/app/content
+    <<: *media-tool
+    entrypoint: ["node", "scripts/sync-media.mjs"]
+
+  media-upload:
+    <<: *media-tool
+    entrypoint: ["node", "scripts/upload-media-r2.mjs"]
 
   content-builder:
     build:

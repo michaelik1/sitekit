@@ -3,9 +3,8 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci --no-audit --no-fund
 
-FROM dependencies AS media-sync
+FROM dependencies AS media-tools
 COPY scripts ./scripts
-ENTRYPOINT ["node", "scripts/sync-media.mjs"]
 
 FROM dependencies AS build
 COPY . .
