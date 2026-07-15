@@ -1,0 +1,78 @@
+{
+  "version": 1,
+  "description": "Binary decoy media. Upload each path to private media storage, then commit this manifest without the binaries.",
+  "files": [
+    {
+      "path": "videos/dorozhka-iz-shchebnya/video.mp4",
+      "localPath": "content/videos/dorozhka-iz-shchebnya/video.mp4",
+      "bytes": 28971992,
+      "sha256": "e1656ee458f4b926b714cb4a4014b489294adcfd2c79f29e3088a67fa4ab223e"
+    },
+    {
+      "path": "videos/kapelnyy-poliv-iz-bochki/video.mp4",
+      "localPath": "content/videos/kapelnyy-poliv-iz-bochki/video.mp4",
+      "bytes": 114643490,
+      "sha256": "71bf01f25e60ce73dc329f826267dd3b8fbf77cb8242440fef92e091b50d5797"
+    },
+    {
+      "path": "videos/klubnika-posle-zimy-video/video.mp4",
+      "localPath": "content/videos/klubnika-posle-zimy-video/video.mp4",
+      "bytes": 56272801,
+      "sha256": "16cc837365711f503b94c26e3f3b92544e62320ae14b3d836e06f0862b461187"
+    },
+    {
+      "path": "videos/kompostnaya-kucha-bez-zapaha/video.mp4",
+      "localPath": "content/videos/kompostnaya-kucha-bez-zapaha/video.mp4",
+      "bytes": 34003319,
+      "sha256": "a28a3f13bbed7d36460d79b9c37e1a4be204a34327fde9cdeb370d6a703a9317"
+    },
+    {
+      "path": "videos/mini-prud-mesto-i-rasteniya/video.mp4",
+      "localPath": "content/videos/mini-prud-mesto-i-rasteniya/video.mp4",
+      "bytes": 121310451,
+      "sha256": "6326772168bd3390f731d97c68570bb12497ad594f6fe7a1142902af4220b197"
+    },
+    {
+      "path": "videos/mulcha-iz-skoshennoy-travy/video.mp4",
+      "localPath": "content/videos/mulcha-iz-skoshennoy-travy/video.mp4",
+      "bytes": 74666409,
+      "sha256": "b3396677bb354aee74a760f2084d36ede1b0ff365e9e677e9b905969cfd76a50"
+    },
+    {
+      "path": "videos/obrezka-smorodiny/video.mp4",
+      "localPath": "content/videos/obrezka-smorodiny/video.mp4",
+      "bytes": 53525643,
+      "sha256": "83924c32064740509d38287d8ab93d06240e9afcec9513a699133e51ba954588"
+    },
+    {
+      "path": "videos/podvyazka-tomatov-v-teplice/video.mp4",
+      "localPath": "content/videos/podvyazka-tomatov-v-teplice/video.mp4",
+      "bytes": 84515016,
+      "sha256": "59a351edced3a4c4ff667dd3ad689324c03d07b295ea081e2fa8268a2492435e"
+    },
+    {
+      "path": "videos/provetrivanie-teplicy-v-zharu/video.mp4",
+      "localPath": "content/videos/provetrivanie-teplicy-v-zharu/video.mp4",
+      "bytes": 92834201,
+      "sha256": "14c8209feff333b3e4264f6e2e992b6ae318cceef64a93f3378dde33ea153471"
+    },
+    {
+      "path": "videos/rassada-prostaya-podsvetka/video.mp4",
+      "localPath": "content/videos/rassada-prostaya-podsvetka/video.mp4",
+      "bytes": 49573120,
+      "sha256": "98375f90b01adebf2fbef24107720202231badc0532aa414fd2db428a3771f10"
+    },
+    {
+      "path": "videos/slizni-lovushki-i-profilaktika/video.mp4",
+      "localPath": "content/videos/slizni-lovushki-i-profilaktika/video.mp4",
+      "bytes": 54040121,
+      "sha256": "23d5049b31a6b0bbcf75196becf997de9d68997d61f8272cf7b3e92a3dca7cb8"
+    },
+    {
+      "path": "videos/vysokaya-gryadka-sloi/video.mp4",
+      "localPath": "content/videos/vysokaya-gryadka-sloi/video.mp4",
+      "bytes": 56374900,
+      "sha256": "a99bdf7ff1488ad810e581b1ec1a2ccb0046fe4b25d4af52f74758bfaa442596"
+    }
+  ]
+}

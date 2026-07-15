@@ -92,6 +92,29 @@ NUXT_PUBLIC_CONTACT_EMAIL=editor@dacha-praktik.ru
 
 После смены домена обязательно обновите обе переменные: они используются в canonical URL, sitemap, RSS и Open Graph.
 
+## Media storage
+
+Video binaries are deliberately not stored in Git. Their names, sizes and SHA-256 checksums are committed in `content/media-manifest.json`; a bad or incomplete download will therefore never be served accidentally.
+
+Before the first deployment, upload every object from the manifest to private HTTPS storage at the same relative path. For example, `videos/podvyazka-tomatov-v-teplice/video.mp4` must be available as `<DECOY_MEDIA_BASE_URL>/videos/podvyazka-tomatov-v-teplice/video.mp4`.
+
+Set `DECOY_MEDIA_BASE_URL` in `decoy/.env` and, when the storage accepts bearer authentication, set `DECOY_MEDIA_TOKEN` there too. Then download and verify all videos:
+
+```bash
+make decoy-media-sync
+```
+
+Run this command before `make decoy-up` on a new server. It skips intact local files and downloads only missing or changed files. The token is used only for the server-to-storage download; visitors receive video through the decoy itself.
+
+When adding or replacing video locally, upload it to storage and run this before committing:
+
+```bash
+cd decoy
+npm run media:manifest
+```
+
+Commit the updated manifest, config and poster — never the video binary.
+
 ## Docker Compose
 
 Сервис ожидает существующую внешнюю сеть `reverse-proxy-network`:

@@ -43,6 +43,16 @@ content/videos/poliv-teplicy/
 
 После замены демонстрационного `video.mp4` укажите настоящую длительность, поставьте `placeholder: false` и `status: "published"`.
 
+## Video storage
+
+`video.mp4` and `video.webm` are not committed to Git. Keep them locally while editing, upload them to the configured private media storage and update the tracked manifest from the `decoy/` directory:
+
+```bash
+npm run media:manifest
+```
+
+On a new server, configure `DECOY_MEDIA_BASE_URL` (and optionally `DECOY_MEDIA_TOKEN`) in `.env`, then run `npm run media:sync` before building the decoy. Each file is checked against its SHA-256 checksum in `content/media-manifest.json`.
+
 ## Проверка
 
 ```bash

@@ -3,7 +3,6 @@ description: "Показываем базовую схему с фильтром
 category: "Полив"
 author: "Илья Садов"
 publishedAt: "2026-04-18"
-duration: "00:08"
 quality: "HD"
 tags: ["полив", "грядки", "бочка"]
 poster: "cover"
@@ -11,4 +10,4 @@ video: "video.mp4"
 status: "published"
 featured: true
 placeholder: true
-note: "Короткая видеозаметка-заставка. Полная версия материала готовится."
+note: "Источник: https://www.youtube.com/watch?v=TlkH888rcmo"

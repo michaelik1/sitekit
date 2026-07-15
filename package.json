@@ -18,6 +18,8 @@
     "check": "npm run typecheck && npm run build",
     "new:article": "node scripts/new-article.mjs",
     "new:video": "node scripts/new-video.mjs",
+    "media:manifest": "node scripts/media-manifest.mjs",
+    "media:sync": "node scripts/sync-media.mjs",
     "source:check": "node scripts/check-source.mjs"
   },
   "dependencies": {
