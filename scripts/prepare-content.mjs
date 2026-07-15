@@ -460,12 +460,10 @@ async function buildArticles() {
     validatePublishedDate(publishedAt, status, file);
     if (updatedAt < publishedAt) fail(`${file}: updatedAt не может быть раньше publishedAt.`);
     if (!markdown.trim()) fail(`${file}: текст статьи пуст.`);
-    const coverName = typeof data.cover === 'string' ? data.cover : 'cover.svg';
-    const cover = safeLocalAsset(coverName, articleDir, file);
-    if (!cover) fail(`${file}: cover должен быть локальным файлом.`);
-    if (!IMAGE_EXTENSIONS.has(extname(cover.clean).toLowerCase())) fail(`${file}: cover должен быть изображением.`);
-    const coverStats = await stat(cover.absolute).catch(() => null);
-    if (!coverStats?.isFile()) fail(`${file}: обложка "${coverName}" не найдена.`);
+    // Resolve cover with or without an extension; defaults to a file named "cover".
+    const coverRaw = typeof data.cover === 'string' && data.cover.trim() ? data.cover.trim() : 'cover';
+    const cover = await resolveAssetFuzzy(coverRaw, articleDir, IMAGE_EXTENSIONS, file);
+    if (!cover) fail(`${file}: обложка "${coverRaw}" не найдена (поддерживаются: ${[...IMAGE_EXTENSIONS].join(', ')}).`);
     await validateMarkdownAssets(markdown, articleDir, file);
 
     const publicBase = `/generated/articles/${slug}`;
