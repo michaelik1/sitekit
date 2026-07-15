@@ -37,7 +37,7 @@ services:
     volumes:
       - ./content:/app/content:ro
       - ./generated:/app/generated:ro
-      - ./public/generated:/app/.output/public/generated:ro
+      - ./public/generated:/app/public/generated:ro
       - ./_videofiles:/app/_videofiles:ro
     healthcheck:
       test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.status===204?0:1)).catch(()=>process.exit(1))"]
