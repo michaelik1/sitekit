@@ -243,6 +243,7 @@ input:focus, select:focus { border-color: var(--forest); box-shadow: 0 0 0 3px r
 .video-player-shell { overflow: hidden; background: #0b0f0c; box-shadow: var(--shadow); }
 .video-player { display: block; width: 100%; aspect-ratio: 16/9; background: #0b0f0c; }
 .video-notice { margin: 0; padding: 10px 13px; background: #ece4d6; border-inline: 1px solid var(--line); color: var(--muted); font-size: var(--text-xs); }
+.video-notice a { color: var(--forest); font-weight: 700; text-decoration: underline; text-underline-offset: 2px; }
 .video-category { margin-top: 28px; }
 /* Заголовок видеостраницы: было до 5rem → убираем */
 .video-layout h1 { font-size: clamp(1.75rem, 3.5vw, 2.875rem); }

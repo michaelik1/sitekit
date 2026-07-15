@@ -11,6 +11,7 @@ const related = computed(() => (collection.value?.videos ?? []).filter((item) =>
 const siteUrl = String(config.public.siteUrl).replace(/\/$/, "");
 const canonical = `${siteUrl}/videos/${current.value.id}`;
 const videoMime = computed(() => current.value.src.toLowerCase().endsWith('.webm') ? 'video/webm' : 'video/mp4');
+const noteParts = computed(() => linkifyText(current.value.note));
 useSeoMeta({ title: current.value.title, description: current.value.description, ogTitle: current.value.title, ogDescription: current.value.description, ogImage: current.value.poster.endsWith(".svg") ? `${siteUrl}/og-default.png` : `${siteUrl}${current.value.poster}`, ogUrl: canonical });
 useHead({ link: [{ rel: "canonical", href: canonical }] });
 </script>
@@ -26,7 +27,12 @@ useHead({ link: [{ rel: "canonical", href: canonical }] });
             Ваш браузер не поддерживает встроенное видео.
           </video>
         </div>
-        <p v-if="current.placeholder" class="video-notice">{{ current.note }}</p>
+        <p v-if="current.placeholder && current.note" class="video-notice">
+          <template v-for="(part, index) in noteParts" :key="index">
+            <a v-if="part.href" :href="part.href" target="_blank" rel="noopener noreferrer">{{ part.text }}</a>
+            <template v-else>{{ part.text }}</template>
+          </template>
+        </p>
         <p class="eyebrow video-category">{{ current.category }}</p>
         <h1>{{ current.title }}</h1>
         <p class="article-deck">{{ current.description }}</p>
