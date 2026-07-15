@@ -17,9 +17,7 @@ services:
       - ./generated:/app/generated
 
   decoy:
-    build:
-      context: .
-    image: decoy:latest
+    image: *decoy-image
     container_name: decoy
     restart: unless-stopped
     init: true
