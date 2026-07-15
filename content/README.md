@@ -51,7 +51,7 @@ content/videos/poliv-teplicy/
 npm run media:manifest
 ```
 
-On a new server, configure `DECOY_MEDIA_BASE_URL` (and optionally `DECOY_MEDIA_TOKEN`) in `.env`, then run `npm run media:sync` before building the decoy. Each file is checked against its SHA-256 checksum in `content/media-manifest.json`.
+On a new server, configure `DECOY_MEDIA_BASE_URL` (and optionally `DECOY_MEDIA_TOKEN`) in `.env`, then run `docker compose run --rm --build media-sync` before building the decoy. Node.js and npm are contained in the one-off Docker service and are not required on the host. Each file is checked against its SHA-256 checksum in `content/media-manifest.json`.
 
 ## Проверка
 

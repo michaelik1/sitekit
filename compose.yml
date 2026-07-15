@@ -5,6 +5,19 @@ networks:
 x-decoy-image: &decoy-image decoy:latest
 
 services:
+  media-sync:
+    build:
+      context: .
+      target: media-sync
+    image: decoy-media-sync:latest
+    profiles: ["tools"]
+    env_file:
+      - .env
+    user: "0:0"
+    restart: "no"
+    volumes:
+      - ./content:/app/content
+
   content-builder:
     build:
       context: .

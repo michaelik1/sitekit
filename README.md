@@ -98,13 +98,13 @@ Video binaries and cover images are deliberately not stored in Git. Their names,
 
 Before the first deployment, upload every object from the manifest to private HTTPS storage at the same relative path. For example, `videos/podvyazka-tomatov-v-teplice/video.mp4` must be available as `<DECOY_MEDIA_BASE_URL>/videos/podvyazka-tomatov-v-teplice/video.mp4`.
 
-Cloudflare R2 is supported directly. Set `DECOY_R2_ENDPOINT`, `DECOY_R2_BUCKET`, `DECOY_R2_ACCESS_KEY_ID` and `DECOY_R2_SECRET_ACCESS_KEY` in `decoy/.env`. Use an Object Read & Write key only for uploading; deployment servers need a separate Object Read-only key. Then download and verify all videos:
+Cloudflare R2 is supported directly. Set `DECOY_R2_ENDPOINT`, `DECOY_R2_BUCKET`, `DECOY_R2_ACCESS_KEY_ID` and `DECOY_R2_SECRET_ACCESS_KEY` in `decoy/.env`. Use an Object Read & Write key only for uploading; deployment servers need a separate Object Read-only key. On the deployment server Node.js and npm are not required: the S3 client runs in a one-off Docker container. Then download and verify all videos:
 
 ```bash
-make decoy-media-sync
+docker compose run --rm --build media-sync
 ```
 
-Run the sync on the server before starting the application. It skips intact local files and downloads only missing or changed files. The token is used only for the server-to-storage download; visitors receive media from this server, not from the object storage.
+Run the sync on the server before starting the application. It skips intact local files and downloads only missing or changed files. The token is used only for the server-to-storage download; visitors receive media from this server, not from the object storage. The server needs only Docker Compose; `npm` is neither installed nor invoked on the host.
 
 When adding or replacing video locally, upload it to storage and run this before committing:
 
@@ -123,6 +123,7 @@ Commit the updated manifest, config and poster — never the video binary.
 ```bash
 docker network create reverse-proxy-network
 cp .env.example .env
+docker compose run --rm --build media-sync
 docker compose up -d --build
 ```
 

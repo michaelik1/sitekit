@@ -1,9 +1,16 @@
-FROM node:22.18-bookworm-slim AS build
+FROM node:22.18-bookworm-slim AS dependencies
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci --no-audit --no-fund
+
+FROM dependencies AS media-sync
+COPY scripts ./scripts
+ENTRYPOINT ["node", "scripts/sync-media.mjs"]
+
+FROM dependencies AS build
 COPY . .
 RUN SKIP_CONTENT_PRERENDER=true node ./node_modules/@nuxt/cli/bin/nuxi.mjs build
+
 
 FROM node:22.18-bookworm-slim AS runtime
 ENV NODE_ENV=production \
