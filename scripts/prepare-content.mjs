@@ -37,7 +37,7 @@ function parseYamlScalar(raw, file, lineNumber) {
 function parseFlatYaml(source, file) {
   const result = {};
   let activeList = null;
-  const lines = source.replace(/\r\n/g, '\n').split('\n');
+  const lines = source.replace(/\r/g, '').split('\n');
   for (let index = 0; index < lines.length; index += 1) {
     const rawLine = lines[index];
     if (!rawLine.trim() || rawLine.trimStart().startsWith('#')) continue;
@@ -259,7 +259,7 @@ function inlineMarkdown(text, assetResolver) {
 }
 
 function renderMarkdown(markdown, articleDir, publicBase, file) {
-  const lines = markdown.replace(/\r\n/g, '\n').split('\n');
+  const lines = markdown.replace(/\r/g, '').split('\n');
   const html = [];
   const toc = [];
   const usedIds = new Map();
