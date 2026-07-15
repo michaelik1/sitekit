@@ -94,7 +94,7 @@ NUXT_PUBLIC_CONTACT_EMAIL=editor@dacha-praktik.ru
 
 ## Media storage
 
-Video binaries and cover images are deliberately not stored in Git. Their names, sizes and SHA-256 checksums are committed in `content/media-manifest.json`; a bad or incomplete download will therefore never be served accidentally.
+Video binaries and cover images are deliberately not stored in Git. Their names, sizes and SHA-256 checksums are committed in `content/media-manifest.json`; a bad or incomplete download will therefore never be served accidentally. After syncing, `content/` is their only local copy: Nuxt serves it directly at `/media/...`, including HTTP Range support for video. No files are copied into `public/` or a second video directory.
 
 Before the first deployment, upload every object from the manifest to private HTTPS storage at the same relative path. For example, `videos/podvyazka-tomatov-v-teplice/video.mp4` must be available as `<DECOY_MEDIA_BASE_URL>/videos/podvyazka-tomatov-v-teplice/video.mp4`.
 
@@ -104,7 +104,7 @@ Cloudflare R2 is supported directly. Set `DECOY_R2_ENDPOINT`, `DECOY_R2_BUCKET`,
 make decoy-media-sync
 ```
 
-`make decoy-up` runs this sync automatically. It skips intact local files and downloads only missing or changed files. The token is used only for the server-to-storage download; visitors receive decoy media through the decoy itself.
+Run the sync on the server before starting the application. It skips intact local files and downloads only missing or changed files. The token is used only for the server-to-storage download; visitors receive media from this server, not from the object storage.
 
 When adding or replacing video locally, upload it to storage and run this before committing:
 

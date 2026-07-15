@@ -2,19 +2,19 @@ networks:
   reverse-proxy-network:
     external: true
 
+x-decoy-image: &decoy-image decoy:latest
+
 services:
   content-builder:
     build:
       context: .
-    image: decoy:latest
+    image: *decoy-image
     command: ["node", "scripts/prepare-content.mjs"]
     user: "0:0"
     restart: "no"
     volumes:
       - ./content:/app/content:ro
       - ./generated:/app/generated
-      - ./public/generated:/app/public/generated
-      - ./_videofiles:/app/_videofiles
 
   decoy:
     build:
@@ -37,8 +37,6 @@ services:
     volumes:
       - ./content:/app/content:ro
       - ./generated:/app/generated:ro
-      - ./public/generated:/app/public/generated:ro
-      - ./_videofiles:/app/_videofiles:ro
     healthcheck:
       test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.status===204?0:1)).catch(()=>process.exit(1))"]
       interval: 30s

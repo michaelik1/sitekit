@@ -20,7 +20,5 @@ pnpm-debug.log*
 .DS_Store
 
 # Content-build artifacts (regenerated from content/)
-generated/
-public/generated/
-_videofiles
+/generated/
 content/videos/**/video.mp4

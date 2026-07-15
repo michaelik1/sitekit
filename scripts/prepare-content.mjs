@@ -1,14 +1,10 @@
-import { cp, mkdir, open, readdir, readFile, rename, rm, stat, writeFile } from 'node:fs/promises';
+import { mkdir, open, readdir, readFile, rename, stat, writeFile } from 'node:fs/promises';
 import { basename, dirname, extname, join, normalize, relative, resolve, sep } from 'node:path';
 import process from 'node:process';
 
 const root = resolve(import.meta.dirname, '..');
 const contentRoot = join(root, 'content');
 const generatedRoot = join(root, 'generated');
-const publicGeneratedRoot = join(root, 'public', 'generated');
-// Video binaries are stored outside public/ so they are served only through the
-// server route that supports Range requests (HTTP 206). This enables browser streaming.
-const videoFilesRoot = join(root, '_videofiles');
 const checkOnly = process.argv.includes('--check');
 const todayUtc = process.env.CONTENT_TODAY ?? new Date().toISOString().slice(0, 10);
 
@@ -424,27 +420,8 @@ async function listDirectories(path) {
   return entries.filter((entry) => entry.isDirectory() && !entry.name.startsWith('.')).map((entry) => entry.name).sort();
 }
 
-async function copyFolderAssets(sourceDir, destinationDir, exclude = new Set(), excludeExts = new Set()) {
-  await mkdir(destinationDir, { recursive: true });
-  const entries = await readdir(sourceDir, { withFileTypes: true });
-  for (const entry of entries) {
-    if (exclude.has(entry.name) || entry.name.startsWith('.')) continue;
-    const sourcePath = join(sourceDir, entry.name);
-    const destinationPath = join(destinationDir, entry.name);
-    if (entry.isDirectory()) {
-      await copyFolderAssets(sourcePath, destinationPath, exclude, excludeExts);
-    } else {
-      const ext = extname(entry.name).toLowerCase();
-      if (ALLOWED_ASSET_EXTENSIONS.has(ext) && !excludeExts.has(ext)) {
-        await cp(sourcePath, destinationPath);
-      }
-    }
-  }
-}
-
 async function buildArticles() {
   const sourceRoot = join(contentRoot, 'articles');
-  const outputRoot = join(publicGeneratedRoot, 'articles');
   const slugs = await listDirectories(sourceRoot);
   const articles = [];
 
@@ -466,7 +443,8 @@ async function buildArticles() {
     if (!cover) fail(`${file}: обложка "${coverRaw}" не найдена (поддерживаются: ${[...IMAGE_EXTENSIONS].join(', ')}).`);
     await validateMarkdownAssets(markdown, articleDir, file);
 
-    const publicBase = `/generated/articles/${slug}`;
+    // content/ is the single local media copy. It is served by /media/ at runtime.
+    const publicBase = `/media/articles/${slug}`;
     const rendered = renderMarkdown(markdown, articleDir, publicBase, file);
     const plainWords = markdown.replace(/[`#>*_\[\]()-]/g, ' ').split(/\s+/).filter(Boolean).length;
     const readingMinutes = Math.max(1, Math.ceil(plainWords / 180));
@@ -488,8 +466,6 @@ async function buildArticles() {
       toc: rendered.toc,
       wordCount: plainWords,
     });
-
-    if (!checkOnly && status === 'published') await copyFolderAssets(articleDir, join(outputRoot, slug), new Set(['article.md']));
   }
 
   const published = articles
@@ -502,7 +478,6 @@ async function buildArticles() {
 
 async function buildVideos() {
   const sourceRoot = join(contentRoot, 'videos');
-  const outputRoot = join(publicGeneratedRoot, 'videos');
   const slugs = await listDirectories(sourceRoot);
   const videos = [];
 
@@ -535,9 +510,9 @@ async function buildVideos() {
       duration = detected ?? '—';
     }
 
-    const publicBase = `/generated/videos/${slug}`;
-    // Video src goes through the server range-request route (/_videofiles/…)
-    const srcPath = `/stream/${slug}/${videoAsset.clean}`;
+    const publicBase = `/media/videos/${slug}`;
+    // The media route supports Range requests for this direct content/ file.
+    const srcPath = `${publicBase}/${videoAsset.clean}`;
     videos.push({
       id: slug,
       title: asString(data.title, 'title', file),
@@ -555,15 +530,6 @@ async function buildVideos() {
       poster: `${publicBase}/${posterAsset.clean}`,
       src: srcPath,
     });
-
-    if (!checkOnly && status === 'published') {
-      // Copy poster and other non-video assets to public/generated/videos/{slug}/
-      await copyFolderAssets(videoDir, join(outputRoot, slug), new Set(['config.yml']), VIDEO_EXTENSIONS);
-      // Copy video binary to _videofiles/{slug}/ (served via streaming route)
-      const videoFilesDir = join(videoFilesRoot, slug);
-      await mkdir(videoFilesDir, { recursive: true });
-      await cp(videoAsset.absolute, join(videoFilesDir, videoAsset.clean));
-    }
   }
 
   const published = videos.filter((video) => video.status === 'published').sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
@@ -579,22 +545,11 @@ async function writeJsonAtomic(path, value) {
   await rename(temp, path);
 }
 
-async function emptyDirectory(path) {
-  await mkdir(path, { recursive: true });
-  const entries = await readdir(path);
-  await Promise.all(entries.map((entry) => rm(join(path, entry), { recursive: true, force: true })));
-}
-
 async function main() {
   const siteFile = join(contentRoot, 'site.json');
   const site = JSON.parse(await readFile(siteFile, 'utf8'));
   if (!site || typeof site !== 'object' || Array.isArray(site)) fail(`${siteFile}: JSON должен содержать объект.`);
   validateSiteSettings(site, siteFile);
-
-  if (!checkOnly) {
-    await emptyDirectory(publicGeneratedRoot);
-    await emptyDirectory(videoFilesRoot);
-  }
 
   const [articles, videos] = await Promise.all([buildArticles(), buildVideos()]);
   const categories = [...new Set(articles.map((item) => item.category))].sort((a, b) => a.localeCompare(b, 'ru'));
