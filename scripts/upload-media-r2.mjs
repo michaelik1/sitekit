@@ -1,7 +1,7 @@
 import { createReadStream } from 'node:fs';
 import { readFile, stat } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
-import { PutObjectCommand } from '@aws-sdk/client-s3';
+import { HeadObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
 import { loadDotEnv, r2Client, r2Config } from './r2.mjs';
 
 const root = resolve(import.meta.dirname, '..');
@@ -13,17 +13,30 @@ if (!config) throw new Error('Set DECOY_R2_ENDPOINT, DECOY_R2_BUCKET, DECOY_R2_A
 const client = r2Client(config);
 const dryRun = process.argv.includes('--dry-run');
 
+function contentType(path) {
+  const extension = path.slice(path.lastIndexOf('.')).toLowerCase();
+  return new Map([
+    ['.avif', 'image/avif'], ['.gif', 'image/gif'], ['.jpeg', 'image/jpeg'], ['.jpg', 'image/jpeg'],
+    ['.png', 'image/png'], ['.svg', 'image/svg+xml'], ['.webp', 'image/webp'], ['.webm', 'video/webm'], ['.mp4', 'video/mp4'],
+  ]).get(extension) ?? 'application/octet-stream';
+}
+
 for (const item of manifest.files) {
   const source = resolve(root, item.localPath);
   const info = await stat(source).catch(() => null);
   if (!info?.isFile() || info.size !== item.bytes) throw new Error(`Local file is missing or has a different size: ${item.localPath}`);
+  const remote = await client.send(new HeadObjectCommand({ Bucket: config.bucket, Key: item.path })).catch(() => null);
+  if (remote?.ContentLength === item.bytes && remote.Metadata?.sha256 === item.sha256) {
+    console.log(`[media] Already uploaded: ${item.path}`);
+    continue;
+  }
   console.log(`[media] ${dryRun ? 'Would upload' : 'Uploading'}: ${item.path}`);
   if (dryRun) continue;
   await client.send(new PutObjectCommand({
     Bucket: config.bucket,
     Key: item.path,
     Body: createReadStream(source),
-    ContentType: item.path.endsWith('.webm') ? 'video/webm' : 'video/mp4',
+    ContentType: contentType(item.path),
     Metadata: { sha256: item.sha256 },
   }));
 }

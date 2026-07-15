@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 import { createWriteStream } from 'node:fs';
 import { mkdir, readFile, rename, rm, stat } from 'node:fs/promises';
 import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
-import { Readable } from 'node:stream';
+import { Readable, Transform } from 'node:stream';
 import { pipeline } from 'node:stream/promises';
 import { GetObjectCommand } from '@aws-sdk/client-s3';
 import { loadDotEnv, r2Client, r2Config } from './r2.mjs';
@@ -63,7 +63,13 @@ for (const item of manifest.files) {
   await rm(temporary, { force: true });
   const hash = createHash('sha256');
   const stream = typeof body.transformToWebStream === 'function' ? Readable.fromWeb(body.transformToWebStream()) : body;
-  await pipeline(stream, hash, createWriteStream(temporary, { flags: 'wx' }));
+  const verifier = new Transform({
+    transform(chunk, _encoding, callback) {
+      hash.update(chunk);
+      callback(null, chunk);
+    },
+  });
+  await pipeline(stream, verifier, createWriteStream(temporary, { flags: 'wx' }));
   const info = await stat(temporary);
   const actualHash = hash.digest('hex');
   if (info.size !== item.bytes || actualHash !== item.sha256) {

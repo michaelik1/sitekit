@@ -45,7 +45,7 @@ content/videos/poliv-teplicy/
 
 ## Video storage
 
-`video.mp4` and `video.webm` are not committed to Git. Keep them locally while editing, upload them to the configured private media storage and update the tracked manifest from the `decoy/` directory:
+`video.mp4`, `video.webm`, article covers and video posters are not committed to Git. Keep them locally while editing, upload them to the configured private media storage and update the tracked manifest from the `decoy/` directory:
 
 ```bash
 npm run media:manifest
