@@ -1,0 +1,9 @@
+node_modules/
+.nuxt/
+.output/
+.git/
+.idea/
+.playwright-cli/
+/content/
+output/
+package-lock.json
