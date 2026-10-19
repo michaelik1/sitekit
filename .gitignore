@@ -19,6 +19,10 @@ pnpm-debug.log*
 # system
 .DS_Store
 
-# Content-build artifacts (regenerated from content/)
-/generated/
-content/videos/**/video.mp4
+# Local tooling and browser verification artifacts
+.idea/
+.playwright-cli/
+/output/
+
+# Site-specific content
+/content/
