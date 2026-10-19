@@ -25,8 +25,8 @@ jobs:
       - name: Install dependencies
         run: npm ci --no-audit --no-fund
 
-      - name: Validate content, types and build
-        run: npm run check
+      - name: Validate example content, runtime contracts, types and build
+        run: npm run format:check && npm run check
 
   container:
     needs: quality
@@ -37,4 +37,4 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build production image
-        run: docker build --tag dacha-praktik-decoy:ci .
+        run: docker build --tag directory-site-engine:ci .
