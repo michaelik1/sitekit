@@ -8,4 +8,7 @@ npm-debug.log*
 !.env.example
 README.md
 content/
-generated/
+.idea/
+output/
+tests/
+docs/
