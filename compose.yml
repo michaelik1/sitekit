@@ -1,7 +1,6 @@
 services:
   site:
-    build: .
-    image: directory-site-engine:latest
+    image: sitekit:latest
     restart: unless-stopped
     init: true
     ports:
