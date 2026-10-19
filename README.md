@@ -1,148 +1,112 @@
-# Дача Практик — production-ready decoy site
+# Directory Site Engine
 
-Редакционный сайт на Nuxt 4 для статей и локальных видео. Контент хранится отдельно от компонентов, валидируется перед сборкой и не требует правок Vue-кода при публикации.
+A small Nuxt 4 site engine. The repository contains the application and components; site settings, pages and media are loaded at runtime from a separate directory. No database, cloud SDK, content generation step or external service is required.
 
-## Что изменено
+## Getting started
 
-- полностью переработаны главная, каталог статей, статья, видеотека, видео, календарь, страницы проекта, контактов и конфиденциальности;
-- 24 исходные статьи перенесены в Markdown и добавлены ещё 12 материалов;
-- каждая статья находится в своей папке вместе с обложкой и дополнительными изображениями;
-- каждое видео находится в своей папке вместе с `config.yml`, постером и `video.mp4`;
-- удалены случайные просмотры, лайки и неработающая регистрация;
-- добавлены sitemap, RSS, robots.txt, JSON-LD, canonical URL, Open Graph, health-check и защитные HTTP-заголовки;
-- Docker-контейнер запускается от непривилегированного пользователя, с read-only filesystem и проверкой здоровья;
-- контент автоматически проверяется и собирается перед `dev`, `build` и `generate`.
+Requires Node.js 22.18 or later:
 
-## Быстрый запуск
-
-Требуется Node.js 22.18 или новее.
-
-```bash
-cp .env.example .env
+```sh
 npm ci
 npm run dev
 ```
 
-На Windows команды выполняются из PowerShell или `cmd` так же, без `cp`:
+When `content/site.yml` is missing, local development uses the starter site in `examples/content/`. To create your own site, copy the example to `content/`:
 
 ```powershell
-Copy-Item .env.example .env
-npm ci
-npm run dev
+Copy-Item examples/content content -Recurse
 ```
 
-Версия 2.0.1 запускает Nuxt CLI напрямую через текущий `node.exe`. Это устраняет `Error: spawn EINVAL`, возникавшую в версии 2.0.0 на Windows с Node.js 24.
+On Linux or macOS, use `cp -R examples/content content`. The `content/` directory is ignored by Git: your site content is separate from the engine source.
 
-Проверка production-сборки:
+## Docker
 
-```bash
-npm run check
-npm run preview
-```
-
-Для репозитория добавлен GitHub Actions workflow: он проверяет контент, TypeScript, Nuxt-сборку и отдельно собирает Docker-образ.
-
-## Структура контента
-
-```text
-content/
-├── site.json
-├── articles/
-│   └── article-slug/
-│       ├── article.md
-│       ├── cover.svg
-│       └── optional-photo.webp
-└── videos/
-    └── video-slug/
-        ├── config.yml
-        ├── poster.svg
-        └── video.mp4
-```
-
-Подробная памятка находится в [`content/README.md`](content/README.md).
-
-### Создать статью
-
-```bash
-npm run new:article -- poliv-grushi-letom "Как поливать грушу летом"
-```
-
-### Создать видео
-
-```bash
-npm run new:video -- poliv-teplicy "Полив теплицы утром"
-```
-
-Новые материалы создаются как черновики. После заполнения поставьте `status: "published"` и запустите:
-
-```bash
-npm run content:build
-```
-
-## Настройка сайта
-
-Основные тексты главной страницы, сезонный блок и подпись футера находятся в `content/site.json`.
-
-Переменные окружения:
-
-```env
-NUXT_PUBLIC_SITE_URL=https://dacha-praktik.ru
-NUXT_PUBLIC_CONTACT_EMAIL=editor@dacha-praktik.ru
-```
-
-После смены домена обязательно обновите обе переменные: они используются в canonical URL, sitemap, RSS и Open Graph.
-
-## Media storage
-
-Video binaries and cover images are deliberately not stored in Git. Their names, sizes and SHA-256 checksums are committed in `content/media-manifest.json`; a bad or incomplete download will therefore never be served accidentally. After syncing, `content/` is their only local copy: Nuxt serves it directly at `/media/...`, including HTTP Range support for video. No files are copied into `public/` or a second video directory.
-
-Before the first deployment, upload every object from the manifest to private HTTPS storage at the same relative path. For example, `videos/podvyazka-tomatov-v-teplice/video.mp4` must be available as `<DECOY_MEDIA_BASE_URL>/videos/podvyazka-tomatov-v-teplice/video.mp4`.
-
-Cloudflare R2 is supported directly. Set `DECOY_R2_ENDPOINT`, `DECOY_R2_BUCKET`, `DECOY_R2_ACCESS_KEY_ID` and `DECOY_R2_SECRET_ACCESS_KEY` in `decoy/.env`. Use an Object Read & Write key only for uploading; deployment servers need a separate Object Read-only key. Node.js and npm are not required on the host: Docker runs both media tools. Then download and verify all decoy media:
-
-```bash
-docker compose run --rm --build media-sync
-```
-
-Run the sync on the server before starting the application. It skips intact local files and downloads only missing or changed files. The token is used only for the server-to-storage download; visitors receive media from this server, not from the object storage. The server needs only Docker Compose; `npm` is neither installed nor invoked on the host.
-
-When adding or replacing video locally, upload it to storage and run this before committing:
-
-```bash
-cd decoy
-npm run media:manifest
-docker compose run --rm --build media-upload
-```
-
-Commit the updated manifest, config and poster — never the video binary.
-
-## Docker Compose
-
-Сервис ожидает существующую внешнюю сеть `reverse-proxy-network`:
-
-```bash
-docker network create reverse-proxy-network
-cp .env.example .env
-docker compose run --rm --build media-sync
+```sh
 docker compose up -d --build
 ```
 
-Контейнер слушает порт `3000` только внутри Docker-сети. TLS и публичный маршрут должны завершаться на Traefik или другом reverse proxy.
+The site is available at `http://localhost:3000`. Compose mounts `./content` at `/app/content` as read-only. The directory must exist and contain `site.yml` and `index/page.yml`. The image is built without site content; use the same image with a different bind mount to serve another site.
 
-## Команды
+To select a different directory and port in PowerShell:
 
-| Команда | Назначение |
-|---|---|
-| `npm run dev` | сборка контента, Nuxt dev server и наблюдение за `content/` |
-| `npm run content:check` | проверка метаданных и файлов без перезаписи output |
-| `npm run content:build` | генерация JSON-индексов и копирование медиа |
-| `npm run source:check` | синтаксическая проверка TypeScript и `<script>` в Vue |
-| `npm run typecheck` | проверка контента, Nuxt-типов и TypeScript |
-| `npm run build` | production-сборка |
-| `npm run check` | полный цикл проверок и сборки |
+```powershell
+$env:CONTENT_PATH = 'C:/sites/my-site'
+$env:SITE_PORT = '8080'
+docker compose up -d
+```
 
-Полный список действий перед публикацией: [`PRODUCTION_CHECKLIST.md`](PRODUCTION_CHECKLIST.md).
+Without Compose:
 
-## Важное о демонстрационных видео
+```sh
+docker build -t directory-site-engine .
+docker run -d --name my-site -p 3000:3000 --mount type=bind,source=/absolute/path/to/content,target=/app/content,readonly directory-site-engine
+```
 
-В архиве лежат короткие валидные MP4-заставки, чтобы проигрыватель и Docker-сборка работали сразу. В `config.yml` таких роликов стоит `placeholder: true`. Замените `video.mp4`, обновите `duration`, поставьте `placeholder: false` и при необходимости измените текст `note`.
+The host does not need Node.js or npm to run the container. The site owner manages content, storage synchronization and backups outside the engine.
+
+## Directory structure
+
+```text
+content/
+  site.yml
+  index/page.yml                    -> /
+  about/page.yml                    -> /about
+  articles/page.yml                 -> /articles
+  articles/first-story/page.yml     -> /articles/first-story
+  articles/first-story/media/cover.webp
+```
+
+A directory containing `page.yml` becomes a page automatically. Intermediate directories do not need their own pages. The root `index` directory maps to `/`; nested `index` directories are not allowed. URL segments use lowercase Latin letters, digits, hyphens and underscores. Directories named `media` do not become routes; `api` and `_nuxt` are reserved names.
+
+A minimal page:
+
+```yaml
+schemaVersion: 1
+title: About
+blocks:
+  - type: markdown
+    text: |
+      ## Hello
+      This is my new page.
+```
+
+See [docs/content.md](docs/content.md) for the content format and all block types. The validation schemas are defined in [shared/content.ts](shared/content.ts).
+
+## Updates and errors
+
+The server reloads content on the first request after the cache expires (one second by default). Edit YAML, add a directory or replace media, then refresh the browser. No image rebuild or container restart is required. An already open browser tab does not refresh automatically.
+
+Each update is validated as a complete snapshot. Invalid YAML, unknown blocks, broken page references or missing media do not replace the last valid snapshot; the server logs the error instead. On the first launch without valid content, the server returns HTTP 503. After the problem is fixed, the next cache refresh loads the corrected content. To validate before publishing:
+
+```sh
+npm run content:check
+```
+
+The cache stores metadata and rendered text, not copies of media. When replacing media, upload a new filename and then update the YAML reference; remove the old file after the switch. This keeps the previous snapshot usable. Prepare related changes in a separate directory rather than overwriting many live files one at a time under load.
+
+## Environment variables
+
+| Variable                    | Purpose                                                                                          |
+| --------------------------- | ------------------------------------------------------------------------------------------------ |
+| `NUXT_CONTENT_DIR`          | Content directory for the Node server; `/app/content` in the image                               |
+| `NUXT_CONTENT_CACHE_TTL_MS` | Reload interval in milliseconds; defaults to `1000`                                              |
+| `NUXT_PUBLIC_SITE_URL`      | Optional override for the URL in `site.yml`, used by canonical URLs, sitemap, RSS and Open Graph |
+| `CONTENT_PATH`              | Compose bind mount source; defaults to `./content`                                               |
+| `SITE_PORT`                 | Compose host port; defaults to `3000`                                                            |
+
+Compose reads `.env` automatically. For `npm run content:check`, set `NUXT_CONTENT_DIR` in the process environment. The container receives its environment from Compose and does not load arbitrary `.env` files from disk.
+
+## Checks
+
+```sh
+npm run test          # Route, block, media, cache and HTTP Range contracts
+npm run content:check # Schemas, references and files in the selected directory
+npm run typecheck    # Vue and TypeScript checks
+npm run format:check # Source and documentation formatting
+npm run build        # Build the engine without reading site content
+npm run check        # Run tests, validate content, check types and build
+```
+
+`/api/health` checks the running process. `/sitemap.xml`, `/rss.xml` and `/robots.txt` are generated from the current published content. Drafts are excluded from pages, collections, sitemap, RSS and media delivery. The API only returns published data. `/media/` only exposes assets referenced by published pages.
+
+The engine's interface labels and starter content are in English. The `language` setting controls the document language, content sorting and date formatting, and defaults to `en`. Site topics, navigation, copy and theme colors come from the content directory; new block types are added to the engine source.

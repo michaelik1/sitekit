@@ -1,15 +1,11 @@
-# История изменений
+# Changelog
 
-## 2.0.1
+## 3.0.0
 
-- исправлен запуск `npm run dev` на Windows с Node.js 24;
-- Nuxt CLI теперь запускается напрямую через текущий исполняемый файл Node.js, без `npx.cmd`;
-- добавлена явная диагностика, если зависимости ещё не установлены;
-- улучшено завершение dev-сервера и наблюдателя за контентом;
-- добавлены инструкции запуска из PowerShell.
-
-## 2.0.0
-
-- файловая архитектура статей и видео;
-- генерация и проверка контента;
-- переработанные страницы, SEO, RSS, sitemap и production-конфигурация.
+- File-based YAML routes and page-local media loaded at runtime from a mounted directory.
+- Ten reusable blocks, optional metadata and covers, explicit or automatic collections.
+- Strict versioned schemas, reference validation, Markdown sanitization, draft isolation and last-valid-snapshot caching.
+- Removed R2/S3 integration, media sync/upload scripts, custom Markdown/YAML parsers and generated content indexes.
+- Content-independent Docker image and simple read-only bind mount deployment.
+- Operator content is ignored by Git; a neutral starter site lives in examples/content.
+- Migrated the existing operator site locally to the new format.
