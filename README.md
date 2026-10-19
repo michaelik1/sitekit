@@ -101,10 +101,10 @@ Compose reads `.env` automatically. For `npm run content:check`, set `NUXT_CONTE
 ```sh
 npm run test          # Route, block, media, cache and HTTP Range contracts
 npm run content:check # Schemas, references and files in the selected directory
-npm run typecheck    # Vue and TypeScript checks
-npm run format:check # Source and documentation formatting
-npm run build        # Build the engine without reading site content
-npm run check        # Run tests, validate content, check types and build
+npm run typecheck     # Vue and TypeScript checks
+npm run format:check  # Source and documentation formatting
+npm run build         # Build the engine without reading site content
+npm run check         # Run tests, validate content, check types and build
 ```
 
 `/api/health` checks the running process. `/sitemap.xml`, `/rss.xml` and `/robots.txt` are generated from the current published content. Drafts are excluded from pages, collections, sitemap, RSS and media delivery. The API only returns published data. `/media/` only exposes assets referenced by published pages.
