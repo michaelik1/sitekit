@@ -1,4 +1,4 @@
-# Directory Site Engine
+# Sitekit
 
 A small Nuxt 4 site engine. The repository contains the application and components; site settings, pages and media are loaded at runtime from a separate directory. No database, cloud SDK, content generation step or external service is required.
 
