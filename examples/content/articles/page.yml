@@ -1,0 +1,9 @@
+schemaVersion: 1
+title: Articles
+description: Stories from the journal.
+blocks:
+  - type: collection
+    source:
+      path: .
+      layout: article
+    searchable: true

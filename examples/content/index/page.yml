@@ -1,0 +1,43 @@
+schemaVersion: 1
+title: Open Journal
+description: A place for your own stories and projects.
+blocks:
+  - type: hero
+    eyebrow: Independent journal
+    title: Good stories start with a simple page
+    text: Write, share your experience and bring useful ideas together in one place.
+    actions:
+      - label: Read the journal
+        href: /articles
+      - label: Features
+        href: /guide
+    panel:
+      title: On your terms
+      text: You own the content and the design.
+      items:
+        - title: Simple structure
+          text: Each page is a directory with YAML and media.
+        - title: Any subject
+          text: A journal, notes, projects or guides.
+  - type: featured
+    eyebrow: First issue
+    title: Where to start
+    page: /articles/first-story
+  - type: collection
+    title: Latest stories
+    source:
+      path: /articles
+      layout: article
+      limit: 4
+  - type: links
+    title: Explore the site
+    items:
+      - label: All stories
+        href: /articles
+        description: Browse by keyword and category.
+      - label: Features
+        href: /guide
+        description: Blocks, images and nested pages.
+  - type: callout
+    title: A place for your ideas
+    text: Replace this example with your own content and organize the site however you like.

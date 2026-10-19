@@ -1,0 +1,32 @@
+schemaVersion: 1
+layout: article
+title: First story
+description: From an idea to your first publication.
+author: Editorial team
+category: Notes
+publishedAt: '2026-01-01'
+cover: ./media/cover.svg
+tags: [getting-started, journal]
+toc: true
+blocks:
+  - type: markdown
+    text: |
+      ## Start with an idea
+
+      A good story helps readers see familiar things in a new way.
+      Share your experience, show the process and explain the result.
+
+      > A concrete example is often more useful than a long explanation.
+
+      ## Gather your material
+
+      1. State the main idea.
+      2. Add observations and examples.
+      3. Check that the story makes sense without additional context.
+
+      ![Abstract composition](./media/cover.svg)
+
+      ## Keep going
+
+      Your second publication can continue the first or tell a completely new story.
+      [Explore other features](/guide).

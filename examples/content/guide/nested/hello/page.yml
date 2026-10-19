@@ -1,0 +1,12 @@
+schemaVersion: 1
+title: Nested page
+description: Its URL follows its directory location.
+blocks:
+  - type: markdown
+    text: |
+      ## Directories become routes
+
+      This URL comes from `guide/nested/hello/page.yml`.
+      The intermediate `nested` directory does not need its own page.
+
+      [Back to features](/guide).

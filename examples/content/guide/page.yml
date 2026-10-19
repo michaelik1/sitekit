@@ -1,0 +1,55 @@
+schemaVersion: 1
+title: Page features
+description: An example of the available blocks and how to combine them.
+toc: true
+blocks:
+  - type: markdown
+    text: |
+      ## Text
+
+      Use **emphasis**, lists, links, quotes, code and tables.
+      Add images within the text or as separate blocks.
+
+      | Element | Purpose |
+      | --- | --- |
+      | Directory | Page URL |
+      | page.yml | Content |
+      | media | Page assets |
+  - type: image
+    src: ./media/cover.svg
+    alt: An abstract composition of geometric shapes
+    caption: An image from this page's media directory.
+  - type: video
+    src: ./media/demo.mp4
+    poster: ./media/cover.svg
+    caption: A short demonstration clip.
+  - type: cards
+    title: Three simple steps
+    numbered: true
+    items:
+      - title: Create a directory
+        text: Choose a URL for the new page.
+      - title: Write the YAML
+        text: Add a title and content blocks.
+      - title: Open the page
+        text: The application picks up changes automatically.
+  - type: stats
+    items:
+      - value: '10'
+        label: block types
+      - value: '1'
+        label: content directory
+      - value: '0'
+        label: required cloud services
+  - type: callout
+    title: Content separate from code
+    text: Use the same application image with different content directories.
+    tone: accent
+  - type: links
+    title: Next steps
+    items:
+      - label: Nested page
+        href: /guide/nested/hello
+        description: Routes at any depth.
+      - label: First story
+        href: /articles/first-story

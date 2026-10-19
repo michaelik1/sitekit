@@ -1,0 +1,25 @@
+schemaVersion: 1
+name: Open Journal
+tagline: Stories, notes and projects
+description: A small site defined entirely by directories and YAML.
+url: https://example.com
+language: en
+logo: OJ
+navigation:
+  - label: Articles
+    href: /articles
+  - label: Features
+    href: /guide
+footer:
+  text: Your content. Your site.
+  links:
+    - label: Features
+      href: /guide
+    - label: RSS
+      href: /rss.xml
+theme:
+  accent: '#183c2c'
+  highlight: '#a04f2c'
+  background: '#f5f0e5'
+  font: serif
+  width: 1180
