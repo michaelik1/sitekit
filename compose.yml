@@ -1,6 +1,6 @@
 services:
   site:
-    image: sitekit:latest
+    image: ghcr.io/michaelik1/sitekit:latest
     restart: unless-stopped
     init: true
     ports:
