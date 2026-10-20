@@ -1,8 +1,8 @@
 export default defineEventHandler(async (event) => {
   setHeader(event, 'cache-control', 'no-store');
+  const url = siteUrl(event);
   try {
     const { site } = await contentStore().get();
-    const url = String(useRuntimeConfig(event).public.siteUrl || site.url).replace(/\/$/, '');
     return { ...site, url };
   } catch (error) {
     console.error('[content]', error);

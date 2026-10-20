@@ -7,13 +7,13 @@ import type {
   PageSource,
   PageSummary,
   RenderedBlock,
-  SiteSettings
+  SiteSource
 } from '../../shared/content.ts';
 import { localAsset, pagePath, referencePath } from './paths.ts';
 import { renderMarkdown } from './markdown.ts';
 
 export type Snapshot = {
-  site: SiteSettings;
+  site: SiteSource;
   pages: Map<string, ContentPage>;
   media: Map<string, string>;
 };

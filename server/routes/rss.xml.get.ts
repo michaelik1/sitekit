@@ -1,7 +1,7 @@
 import { escapeXml } from '../content/xml.ts';
 export default defineEventHandler(async (event) => {
   const { site, pages } = await contentStore().get();
-  const url = String(useRuntimeConfig(event).public.siteUrl || site.url).replace(/\/$/, '');
+  const url = siteUrl(event);
   const items = [...pages.values()]
     .filter((page) => page.layout === 'article' && page.publishedAt)
     .sort((a, b) => b.publishedAt!.localeCompare(a.publishedAt!))

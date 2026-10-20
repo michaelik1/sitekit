@@ -147,7 +147,11 @@ export const siteSchema = z
     name: text,
     tagline: text.default(''),
     description: text.default(''),
-    url: z.url().refine((value) => /^https?:\/\//.test(value), 'Use an HTTP(S) site URL'),
+    // Accepted for existing content directories; public URLs are resolved per request.
+    url: z
+      .url()
+      .refine((value) => /^https?:\/\//.test(value), 'Use an HTTP(S) site URL')
+      .optional(),
     language: text.default('en'),
     logo: text.max(6).default('S'),
     navigation: z.array(action).default([]),
@@ -183,7 +187,8 @@ export const siteSchema = z
   })
   .strict();
 
-export type SiteSettings = z.infer<typeof siteSchema>;
+export type SiteSource = z.infer<typeof siteSchema>;
+export type SiteSettings = Omit<SiteSource, 'url'> & { url: string };
 export type PageSource = z.infer<typeof pageSchema>;
 export type Block = z.infer<typeof blockSchema>;
 export type PageSummary = Omit<PageSource, 'blocks' | 'status' | 'schemaVersion'> & {

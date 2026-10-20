@@ -22,10 +22,7 @@ async function fixture(t: Parameters<Parameters<typeof test>[1]>[0]) {
       stringify({ schemaVersion: 1, title: folder, ...data })
     );
   };
-  await writeFile(
-    join(root, 'site.yml'),
-    stringify({ schemaVersion: 1, name: 'Example', url: 'https://example.com' })
-  );
+  await writeFile(join(root, 'site.yml'), stringify({ schemaVersion: 1, name: 'Example' }));
   await page('index', {});
   return { root, page };
 }
