@@ -6,7 +6,6 @@ services:
     ports:
       - '${SITE_PORT:-3000}:3000'
     environment:
-      NUXT_CONTENT_DIR: /app/content
       NUXT_CONTENT_CACHE_TTL_MS: ${NUXT_CONTENT_CACHE_TTL_MS:-1000}
       NUXT_PUBLIC_SITE_URL: ${NUXT_PUBLIC_SITE_URL:-}
     volumes:

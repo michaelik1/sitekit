@@ -2,7 +2,6 @@ schemaVersion: 1
 name: Open Journal
 tagline: Stories, notes and projects
 description: A small site defined entirely by directories and YAML.
-url: https://example.com
 language: en
 logo: OJ
 navigation:
