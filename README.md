@@ -22,7 +22,8 @@ On Linux or macOS, use `cp -R examples/content content`. The `content/` director
 ## Docker
 
 ```sh
-docker compose up -d --build
+docker build -t sitekit:latest .
+docker compose up -d
 ```
 
 The site is available at `http://localhost:3000`. Compose mounts `./content` at `/app/content` as read-only. The directory must exist and contain `site.yml` and `index/page.yml`. The image is built without site content; use the same image with a different bind mount to serve another site.
@@ -38,8 +39,8 @@ docker compose up -d
 Without Compose:
 
 ```sh
-docker build -t directory-site-engine .
-docker run -d --name my-site -p 3000:3000 --mount type=bind,source=/absolute/path/to/content,target=/app/content,readonly directory-site-engine
+docker build -t sitekit:latest .
+docker run -d --name my-site -p 3000:3000 --mount type=bind,source=/absolute/path/to/content,target=/app/content,readonly sitekit:latest
 ```
 
 The host does not need Node.js or npm to run the container. The site owner manages content, storage synchronization and backups outside the engine.
@@ -86,15 +87,27 @@ The cache stores metadata and rendered text, not copies of media. When replacing
 
 ## Environment variables
 
-| Variable                    | Purpose                                                                                          |
-| --------------------------- | ------------------------------------------------------------------------------------------------ |
-| `NUXT_CONTENT_DIR`          | Content directory for the Node server; `/app/content` in the image                               |
-| `NUXT_CONTENT_CACHE_TTL_MS` | Reload interval in milliseconds; defaults to `1000`                                              |
-| `NUXT_PUBLIC_SITE_URL`      | Optional override for the URL in `site.yml`, used by canonical URLs, sitemap, RSS and Open Graph |
-| `CONTENT_PATH`              | Compose bind mount source; defaults to `./content`                                               |
-| `SITE_PORT`                 | Compose host port; defaults to `3000`                                                            |
+| Variable                    | Purpose                                                                                                       |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `NUXT_CONTENT_DIR`          | Content directory for the Node server; `/app/content` in the image                                            |
+| `NUXT_CONTENT_CACHE_TTL_MS` | Reload interval in milliseconds; defaults to `1000`                                                           |
+| `NUXT_PUBLIC_SITE_URL`      | Optional fixed HTTP(S) origin for canonical URLs, sitemap, RSS and Open Graph; defaults to the request origin |
+| `CONTENT_PATH`              | Compose bind mount source; defaults to `./content`                                                            |
+| `SITE_PORT`                 | Compose host port; defaults to `3000`                                                                         |
 
 Compose reads `.env` automatically. For `npm run content:check`, set `NUXT_CONTENT_DIR` in the process environment. The container receives its environment from Compose and does not load arbitrary `.env` files from disk.
+
+The image already sets `NUXT_CONTENT_DIR=/app/content`, so Compose only needs to mount the directory there. Override the variable only when mounting content at a different container path.
+
+## Domains and reverse proxies
+
+No domain is required in the content directory. Public URLs are resolved for each request using `X-Forwarded-Host` (or `Host`) and `X-Forwarded-Proto` (or the connection protocol). The first value is used for comma-separated forwarded headers. For example, `X-Forwarded-Host: journal.example` and `X-Forwarded-Proto: https` produce `https://journal.example` in canonical links, Open Graph, sitemap, RSS and robots.txt.
+
+Configure the reverse proxy to accept the intended domains and overwrite these forwarded headers with the public host (including its port when needed) and protocol. For direct local access, URLs use the local host and port. Sitekit serves paths at the domain root; hosting it under a URL prefix is not supported.
+
+Changing the proxy domain does not require editing YAML or rebuilding the image. Request origins are resolved outside the shared content cache, so requests for different domains do not reuse another domain's URLs. The old `url` field in `site.yml` is accepted for compatibility but is no longer used to generate public URLs.
+
+To pin one canonical domain regardless of the incoming host, set `NUXT_PUBLIC_SITE_URL=https://example.com` in `.env` and recreate the container with `docker compose up -d`. The override must be an HTTP(S) origin without credentials, a path, a query or a fragment; a trailing slash is allowed.
 
 ## Checks
 
@@ -106,6 +119,8 @@ npm run format:check  # Source and documentation formatting
 npm run build         # Build the engine without reading site content
 npm run check         # Run tests, validate content, check types and build
 ```
+
+To verify HTTP routes and server-rendered metadata against a running instance that serves `examples/content`, set `SITEKIT_TEST_URL` (for example, `http://localhost:3001`) and run `npm run test`. The integration test checks direct requests, proxy headers, domain changes and all generated public URLs. When the instance has a fixed origin override, also set `SITEKIT_TEST_ORIGIN` to that origin. This test is skipped when `SITEKIT_TEST_URL` is unset.
 
 `/api/health` checks the running process. `/sitemap.xml`, `/rss.xml` and `/robots.txt` are generated from the current published content. Drafts are excluded from pages, collections, sitemap, RSS and media delivery. The API only returns published data. `/media/` only exposes assets referenced by published pages.
 

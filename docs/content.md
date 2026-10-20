@@ -9,7 +9,6 @@ schemaVersion: 1
 name: My Journal
 tagline: Notes on projects
 description: Stories and guides.
-url: https://example.com
 language: en
 logo: MJ
 navigation:
@@ -28,7 +27,9 @@ theme:
   width: 1180 # 800–1600 px
 ```
 
-Only `schemaVersion`, `name` and `url` are required. `logo` is text with a maximum of six characters. Navigation and footer links are checked against published pages. HTTP(S), `mailto:`, `tel:` and links to the built-in RSS, sitemap and robots routes are also supported. The theme sets supported CSS variables; it does not execute arbitrary CSS or JavaScript.
+Only `schemaVersion` and `name` are required. `logo` is text with a maximum of six characters. Navigation and footer links are checked against published pages. HTTP(S), `mailto:`, `tel:` and links to the built-in RSS, sitemap and robots routes are also supported. The theme sets supported CSS variables; it does not execute arbitrary CSS or JavaScript.
+
+The domain and public protocol are resolved from each request and the reverse proxy headers. A legacy `url` field is still accepted but does not control generated URLs. Use the optional `NUXT_PUBLIC_SITE_URL` environment variable to pin a fixed canonical origin; otherwise no domain configuration is needed. See the reverse proxy section in the README.
 
 `language` defaults to `en`. Use a BCP 47 language tag, such as `en`, `en-GB` or `de`. It controls the HTML document language, content sorting and date formatting. Built-in interface labels are English regardless of the content language.
 
